@@ -7,6 +7,8 @@ from blacklist import BLACKLIST
 atributos = reqparse.RequestParser()
 atributos.add_argument('usuario_login', type=str, required=True, help="Campo 'login' não pode estar vazio.")
 atributos.add_argument('usuario_senha', type=str, required=True, help="Campo 'senha' não pode estar vazio.")
+atributos.add_argument('usuario_nome', type=str, required=True, help="Campo 'nome' não pode estar vazio.")
+atributos.add_argument('usuario_sobrenome', type=str, required=True, help="Campo 'sobrenome' não pode estar vazio.")
 
 
 class Usuario(Resource):
