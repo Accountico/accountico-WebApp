@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from modelos.orcamento import OrcamentoModel
 from flask_jwt_extended import jwt_required
-import sqlite3
+import psycopg2
 
 
 def normal_parametros(orcamento_nome=None, valor_min=0, valor_max=999999999999, limit=50, offset=0, **data):
@@ -29,31 +29,34 @@ path_parametro.add_argument('offset', type=float)
 
 class Orcamentos(Resource):
     def get(self):
-        connection = sqlite3.connect('banco.db')
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
         cursor = connection.cursor()
         data = path_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = normal_parametros(**validar_data)
         if not parametro.get('orcamento_nome'):
-            consulta = "SELECT * FROM orcamentos WHERE (orcamento_valor >= ?) and (orcamento_valor <= ?) LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM orcamentos WHERE (orcamento_valor >= %s) and (orcamento_valor <= %s) LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         else:
-            consulta = "SELECT * FROM orcamentos WHERE (orcamento_nome = ?) and (orcamento_valor >= ?) and (orcamento_valor <= ?) LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM orcamentos WHERE (orcamento_nome = %s) and (orcamento_valor >= %s) and (orcamento_valor <= %s) LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         orcamentos = []
-        for linha in resultado:
-            orcamentos.append({
-                'orcamento_id': linha[0],
-                'orcamento_nome': linha[1],
-                'orcamento_valor': linha[2],
-                'orcamento_status': linha[3],
-                'orcamento_observacao': linha[4],
-                'orcamento_previsao': linha[5],
-                'orcamento_pagamento': linha[6],
-                'orcamento_cliente_id': linha[7]})
-        return {'orcamentos': orcamentos}
+        if resultado:
+            for linha in resultado:
+                orcamentos.append({
+                    'orcamento_id': linha[0],
+                    'orcamento_nome': linha[1],
+                    'orcamento_valor': linha[2],
+                    'orcamento_status': linha[3],
+                    'orcamento_observacao': linha[4],
+                    'orcamento_previsao': linha[5],
+                    'orcamento_pagamento': linha[6],
+                    'orcamento_cliente_id': linha[7]})
+            return {'orcamentos': orcamentos}
 
 
 class Orcamento(Resource):

@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from modelos.servico import ServicoModel
 from flask_jwt_extended import jwt_required
-import sqlite3
+import psycopg2
 
 
 def normal_parametros(servico_nome=None, limit=50, offset=0, **data):
@@ -23,28 +23,31 @@ path_parametro.add_argument('offset', type=float)
 
 class Servicos(Resource):
     def get(self):
-        connection = sqlite3.connect('banco.db')
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
         cursor = connection.cursor()
         data = path_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = normal_parametros(**validar_data)
         if not parametro.get('servico_nome'):
-            consulta = "SELECT * FROM servicos LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM servicos LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         else:
-            consulta = "SELECT * FROM servicos WHERE (servico_nome = ?) LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM servicos WHERE (servico_nome = %s) LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         servicos = []
-        for linha in resultado:
-            servicos.append({
-                'servico_id': linha[0],
-                'servico_nome': linha[1],
-                'servico_status': linha[2],
-                'servico_observacao': linha[3],
-                'servico_orcamento_id': linha[4]})
-        return {'servicos': servicos}
+        if resultado:
+            for linha in resultado:
+                servicos.append({
+                    'servico_id': linha[0],
+                    'servico_nome': linha[1],
+                    'servico_status': linha[2],
+                    'servico_observacao': linha[3],
+                    'servico_orcamento_id': linha[4]})
+            return {'servicos': servicos}
 
 
 class Servico(Resource):

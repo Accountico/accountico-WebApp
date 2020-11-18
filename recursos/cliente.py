@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from modelos.cliente import ClienteModel
 from flask_jwt_extended import jwt_required
-import sqlite3
+import psycopg2
 
 
 def normal_parametros(cliente_nome=None, limit=50, offset=0, **data):
@@ -23,30 +23,34 @@ path_parametro.add_argument('offset', type=float)
 
 class Clientes(Resource):
     def get(self):
-        connection = sqlite3.connect('banco.db')
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
         cursor = connection.cursor()
         data = path_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = normal_parametros(**validar_data)
         if not parametro.get('cliente_nome'):
-            consulta = "SELECT * FROM clientes LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM clientes LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         else:
-            consulta = "SELECT * FROM clientes WHERE (cliente_nome = ?) LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM clientes WHERE (cliente_nome = %s) LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         clientes = []
-        for linha in resultado:
-            clientes.append({
-                'cliente_id': linha[0],
-                'cliente_cpf': linha[1],
-                'cliente_cnpj': linha[2],
-                'cliente_nome': linha[3],
-                'cliente_telefone': linha[4],
-                'cliente_celular': linha[5],
-                'cliente_email': linha[6]})
-        return {'clientes': clientes}
+        if resultado:
+            for linha in resultado:
+                clientes.append({
+                    'cliente_id': linha[0],
+                    'cliente_cpf': linha[1],
+                    'cliente_cnpj': linha[2],
+                    'cliente_nome': linha[3],
+                    'cliente_telefone': linha[4],
+                    'cliente_celular': linha[5],
+                    'cliente_email': linha[6]})
+            return {'clientes': clientes}
 
 
 class Cliente(Resource):

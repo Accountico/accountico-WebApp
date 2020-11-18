@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from modelos.movimentacao import MovimentacaoModel
 from flask_jwt_extended import jwt_required
-import sqlite3
+import psycopg2
 
 
 def normal_parametros(movimentacao_cliente_id=None, valor_min=0, valor_max=9999999999, limit=50, offset=0, **data):
@@ -29,31 +29,34 @@ path_parametro.add_argument('offset', type=float)
 
 class Movimentacoes(Resource):
     def get(self):
-        connection = sqlite3.connect('banco.db')
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
         cursor = connection.cursor()
         data = path_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = normal_parametros(**validar_data)
         if not parametro.get('movimentacao_cliente_id'):
-            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_valor >= ?) and (movimentacao_valor <= ?) LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_valor >= %s) and (movimentacao_valor <= %s) LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         else:
-            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_cliente_id = ?) and (movimentacao_valor >= ?) and (movimentacao_valor <= ?) LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_cliente_id = %s) and (movimentacao_valor >= %s) and (movimentacao_valor <= %s) LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         movimentacoes = []
-        for linha in resultado:
-            movimentacoes.append({
-                'movimentacao_id': linha[0],
-                'movimentacao_origem': linha[1],
-                'movimentacao_valor': linha[2],
-                'movimentacao_parcela': linha[3],
-                'movimentacao_vencimento': linha[4],
-                'movimentacao_transacao': linha[5],
-                'movimentacao_tipo': linha[6],
-                'movimentacao_cliente_id': linha[7]})
-        return {'movimentacoes': movimentacoes}
+        if resultado:
+            for linha in resultado:
+                movimentacoes.append({
+                    'movimentacao_id': linha[0],
+                    'movimentacao_origem': linha[1],
+                    'movimentacao_valor': linha[2],
+                    'movimentacao_parcela': linha[3],
+                    'movimentacao_vencimento': linha[4],
+                    'movimentacao_transacao': linha[5],
+                    'movimentacao_tipo': linha[6],
+                    'movimentacao_cliente_id': linha[7]})
+            return {'movimentacoes': movimentacoes}
 
 
 class Movimentacao(Resource):

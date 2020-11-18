@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from modelos.cobranca import CobrancaModel
 from flask_jwt_extended import jwt_required
-import sqlite3
+import psycopg2
 
 
 def normal_parametros(cobranca_orcamento_id=None, limit=50, offset=0, **data):
@@ -23,30 +23,33 @@ path_parametro.add_argument('offset', type=float)
 
 class Cobrancas(Resource):
     def get(self):
-        connection = sqlite3.connect('banco.db')
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
         cursor = connection.cursor()
         data = path_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = normal_parametros(**validar_data)
         if not parametro.get('cobranca_orcamento_id'):
-            consulta = "SELECT * FROM cobrancas LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM cobrancas LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         else:
-            consulta = "SELECT * FROM cobrancas WHERE (cobranca_orcamento_id = ?) LIMIT ? OFFSET ?"
+            consulta = "SELECT * FROM cobrancas WHERE (cobranca_orcamento_id = %s) LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
-            resultado = cursor.execute(consulta, tupla)
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
         cobrancas = []
-        for linha in resultado:
-            cobrancas.append({
-                'cobranca_id': linha[0],
-                'cobranca_banco': linha[1],
-                'cobranca_vencimento': linha[2],
-                'cobranca_pagamento': linha[3],
-                'cobranca_observacao': linha[4],
-                'cobranca_valor': linha[5],
-                'cobranca_orcamento_id': linha[6]})
-        return {'cobrancas': cobrancas}
+        if resultado:
+            for linha in resultado:
+                cobrancas.append({
+                    'cobranca_id': linha[0],
+                    'cobranca_banco': linha[1],
+                    'cobranca_vencimento': linha[2],
+                    'cobranca_pagamento': linha[3],
+                    'cobranca_observacao': linha[4],
+                    'cobranca_valor': linha[5],
+                    'cobranca_orcamento_id': linha[6]})
+            return {'cobrancas': cobrancas}
 
 
 class Cobranca(Resource):

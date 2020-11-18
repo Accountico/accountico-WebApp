@@ -36,7 +36,7 @@ class UsuarioRegistro(Resource):
             return {"message:" "login '{}' já existente.".format(data['usuario_login'])}
         user = UserModel(**data)
         user.salvar_usuario()
-        return {'message:' 'Usuario cadastrado com sucesso!'}, 201,  # created
+        return {'message': 'Usuario cadastrado com sucesso!'}, 201,  # created
 
 
 class UsuarioLogin(Resource):
