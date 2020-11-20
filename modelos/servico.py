@@ -4,7 +4,7 @@ from sql_alchemy import banco
 
 class ServicoModel(banco.Model):
     __tablename__ = 'servicos'
-    servico_id = banco.Column(banco.String, primary_key=True)
+    servico_id = banco.Column(banco.Integer, primary_key=True)
     servico_nome = banco.Column(banco.String(100))
     servico_status = banco.Column(banco.String(25))
     servico_observacao = banco.Column(banco.String(200))

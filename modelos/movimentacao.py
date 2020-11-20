@@ -4,7 +4,7 @@ from sql_alchemy import banco
 
 class MovimentacaoModel(banco.Model):
     __tablename__ = 'movimentacoes'
-    movimentacao_id = banco.Column(banco.String, primary_key=True)
+    movimentacao_id = banco.Column(banco.Integer, primary_key=True)
     movimentacao_origem = banco.Column(banco.String(150))
     movimentacao_valor = banco.Column(banco.Float(precision=2))
     movimentacao_parcela = banco.Column(banco.String(5))

@@ -11,7 +11,7 @@ from blacklist import BLACKLIST
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:admin@localhost:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:admin@localhost:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'thisisaverylongmessagethatnobodywillevertryorknowjustbytryingbecauseitssohardtoguessthissecretkeyitisbutitsonlyletterssopaciencemaynullit'
 app.config['JWT_BLACKLIST_ENABLED'] = True

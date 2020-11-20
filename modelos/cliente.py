@@ -3,7 +3,7 @@ from sql_alchemy import banco
 
 class ClienteModel(banco.Model):
     __tablename__ = 'clientes'
-    cliente_id = banco.Column(banco.String, primary_key=True)
+    cliente_id = banco.Column(banco.Integer, primary_key=True)
     cliente_cpf = banco.Column(banco.String(20))
     cliente_cnpj = banco.Column(banco.String(20))
     cliente_nome = banco.Column(banco.String(60))

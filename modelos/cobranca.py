@@ -4,7 +4,7 @@ from sql_alchemy import banco
 
 class CobrancaModel(banco.Model):
     __tablename__ = 'cobrancas'
-    cobranca_id = banco.Column(banco.String, primary_key=True)
+    cobranca_id = banco.Column(banco.Integer, primary_key=True)
     cobranca_banco = banco.Column(banco.String(20))
     cobranca_vencimento = banco.Column(banco.String(10))
     cobranca_pagamento = banco.Column(banco.String(19))

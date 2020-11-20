@@ -4,7 +4,7 @@ from sql_alchemy import banco
 
 class OrcamentoModel(banco.Model):
     __tablename__ = 'orcamentos'
-    orcamento_id = banco.Column(banco.String, primary_key=True)
+    orcamento_id = banco.Column(banco.Integer, primary_key=True)
     orcamento_nome = banco.Column(banco.String(100))
     orcamento_valor = banco.Column(banco.Float(precision=2))
     orcamento_status = banco.Column(banco.String(15))
