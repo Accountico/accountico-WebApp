@@ -12,7 +12,6 @@ atributos.add_argument('usuario_senha', type=str, required=True, help="Campo 'se
 
 
 class Usuario(Resource):
-
     def get(self, usuario_id):
         user = UserModel.achar_usuario(usuario_id)
         if user:
@@ -29,7 +28,6 @@ class Usuario(Resource):
 
 
 class UsuarioRegistro(Resource):
-
     def post(self):
         data = atributos.parse_args()
         if UserModel.achar_por_login(data['usuario_login']):
@@ -40,7 +38,6 @@ class UsuarioRegistro(Resource):
 
 
 class UsuarioLogin(Resource):
-
     @classmethod
     def post(cls):
         data = atributos.parse_args()
