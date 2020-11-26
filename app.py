@@ -11,12 +11,12 @@ from modelos.usuario import UserModel
 # from recursos.servico import Servicos, Servico
 from flask_jwt_extended import JWTManager
 from blacklist import BLACKLIST
-# from config_json import DATABASE_URL
+from config_json import *
 
 
 app = Flask(__name__)
 cors = CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:admin@localhost:5432/postgres'  # DATABASE_URL
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL # 'postgres://postgres:admin@localhost:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'access_token'
 app.config['JWT_BLACKLIST_ENABLED'] = True
