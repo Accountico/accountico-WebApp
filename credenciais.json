@@ -1,0 +1,9 @@
+{
+    "USER": "v.a@email.com",
+    "PASSWORD": "accountico",
+    "HOST": "localhost",
+    "PORT": "5432",
+    "DATABASE": "postgre",
+    "JWT_SECRET_KEY": "access_token",
+    "DATABASE_URL": "postgres://nziquosbodstwx:48dd951530cc2c97c98e6923eb33d2efd323554681e3aace2586b4d7b9e9035a@ec2-54-82-208-124.compute-1.amazonaws.com:5432/dasjv762kuupau"
+}
