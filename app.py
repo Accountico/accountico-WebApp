@@ -1,7 +1,8 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from sql_alchemy import banco
-# from recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout, atributos
+from werkzeug.security import safe_str_cmp
+from flask_jwt_extended import create_access_token
+# rom recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout, atributos
 from modelos.usuario import UserModel
 # from recursos.cliente import Clientes, Cliente
 # from recursos.cobranca import Cobrancas, Cobranca
@@ -79,26 +80,32 @@ def listar_usuarios():
     return jsonify()
 
 
-@app.route('/cadastro', methods=['POST'])  # UsuarioRegistro
-@cross_origin(origin='/*', headers=['Content-Type', 'Authorization'])
-def cadastro():
+@app.route('/cadastro', methods=['POST'])
+@cross_origin(origin='/*', headers=['Content-Type'])
+def post():
     data = request.get_json()
-    usuario_nome = data['usuario_nome']
-    usuario_sobrenome = data['usuario_sobrenome']
-    usuario_login = data['usuario_login']
-    usuario_senha = data['usuario_senha']
-    user = UserModel(usuario_nome, usuario_sobrenome, usuario_login, usuario_senha)
-    if UserModel.achar_por_login(usuario_login):
-        return {'message': 'usuario já cadastrado.'},
-    user.salvar_usuario
+    nome = data["usuario_nome"]
+    sobrenome = data["usuario_sobrenome"]
+    login = data["usuario_login"]
+    senha = data["usuario_senha"]
+    user = UserModel(nome, sobrenome, login, senha)
+    if UserModel.achar_por_login(login):
+        return {'message': 'usuario já cadastrado.'}
+    user.salvar_usuario()
     return {'message': 'usuario cadastrado com sucesso!'}, 201
 
 
-
-@app.route('/login', methods=['POST' 'OPTIONS'])  # UsuarioLogin
-@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
-def login_usuario():
-    return jsonify()
+@app.route('/login', methods=['POST', 'OPTIONS'])
+@cross_origin(origin='*', headers=['Content-Type'])
+def usuario_login():
+    data = request.get_json()
+    login = data['usuario_login']
+    senha = data['usuario_senha']
+    user = UserModel.achar_por_login(login)
+    if user and safe_str_cmp(user.usuario_senha, senha):
+        token_acesso = create_access_token(identity=user.usuario_id)
+        return {'access_token': token_acesso}, 200
+    return {'message': 'login ou senha inválidos!'}, 401
 
 
 @app.route('/logout', methods=['POST' 'OPTIONS'])  # UsuarioLogout
@@ -132,5 +139,6 @@ def listar_servicos_por_id():
 
 
 if __name__ == '__main__':
+    from sql_alchemy import banco
     banco.init_app(app)
     app.run(debug=True)

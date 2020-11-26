@@ -10,10 +10,10 @@ class UserModel(banco.Model):
     usuario_senha = banco.Column(banco.String(40))
 
     def __init__(self, usuario_nome, usuario_sobrenome, usuario_login, usuario_senha):
-        self.usuario_nome = usuario_nome
-        self.usuario_sobrenome = usuario_sobrenome
         self.usuario_login = usuario_login
         self.usuario_senha = usuario_senha
+        self.usuario_nome = usuario_nome
+        self.usuario_sobrenome = usuario_sobrenome
 
     def json(self):
         return {
