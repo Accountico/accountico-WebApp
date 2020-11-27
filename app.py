@@ -2,7 +2,6 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from werkzeug.security import safe_str_cmp
 from flask_jwt_extended import create_access_token
-# rom recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout, atributos
 from modelos.usuario import UserModel
 # from recursos.cliente import Clientes, Cliente
 # from recursos.cobranca import Cobrancas, Cobranca
@@ -11,12 +10,12 @@ from modelos.usuario import UserModel
 # from recursos.servico import Servicos, Servico
 from flask_jwt_extended import JWTManager
 from blacklist import BLACKLIST
-from config_json import *
+# from config_json import DATABASE_URL
 
 
 app = Flask(__name__)
 cors = CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL # 'postgres://postgres:admin@localhost:5432/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:admin@localhost:5432/postgres'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'access_token'
 app.config['JWT_BLACKLIST_ENABLED'] = True
