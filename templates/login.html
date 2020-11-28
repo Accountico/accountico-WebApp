@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Login </title>
+    </head>
+    <body>
+        <div className="container">
+            <div className="Login-Box">
+                <img id="logo" src="accounticoLogo.png"></img>
+                    <form className="Login">
+                        <h1 className="title"> Faça seu login. </h1>
+                        <div className="Login-Group">
+                            <input
+                                type='email'
+                                name='usuario_login'
+                                class="Login-Field"
+                                placeholder="Email"
+                            />
+                        </div>
+                        <div className='Login-Group'>
+                            <input
+                                type='password'
+                                name='usuario_senha'
+                                className="Login-Field"
+                                placeholder="Senha"
+                                onChange={this.onChange}
+                            />
+                            <label></label>
+                        </div>
+                        <div className="buttons">
+                            <button
+                            type="submit"
+                            className="Login-Btn" 
+                            onClick={this.handleSubmit}
+                            >
+                            Entrar
+                            </button>
+                        </div>
+                        <Nav.Link className="cadastrar" href="/register"> Não tenho cadastro </Nav.Link>
+                    </form>
+            </div>
+            <div className="imageDiv">
+                <img id="background" src="background.jpg" alt="Background. Imagem de calculadora"></img>
+            </div>
+        </div>
+    </body>
+</html>
