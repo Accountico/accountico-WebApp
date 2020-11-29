@@ -2,9 +2,7 @@ from flask.helpers import make_response
 from flask import render_template
 from flask_restful import Resource, reqparse
 from modelos.usuario import UserModel
-from flask_jwt_extended import create_access_token, jwt_required, get_raw_jwt
 from werkzeug.security import safe_str_cmp
-from blacklist import BLACKLIST
 
 atributos = reqparse.RequestParser()
 atributos.add_argument('usuario_login', type=str, required=True, help="Campo 'login' não pode estar vazio.")

@@ -1,4 +1,6 @@
 from flask_restful import Resource, reqparse
+from flask.helpers import make_response
+from flask import render_template
 from modelos.movimentacao import MovimentacaoModel
 import psycopg2
 
@@ -58,80 +60,29 @@ class Movimentacoes(Resource):
             return {'movimentacoes': movimentacoes}
 
 
-class Movimentacao(Resource):
-    argumentos = reqparse.RequestParser()
-    argumentos.add_argument('movimentacao_origem', type=str, required=True, help="origem do pagamento não pode estar vazia.")
-    argumentos.add_argument('movimentacao_valor', type=float, required=True, help="valor do pagamento não pode estar vazio.")
-    argumentos.add_argument('movimentacao_parcela', type=str, required=False)
-    argumentos.add_argument('movimentacao_vencimento', type=str, required=False)
-    argumentos.add_argument('movimentacao_transacao', type=str, required=False)
-    argumentos.add_argument('movimentacao_tipo', type=str, required=True, help="tipo de pagamento não pode estar vazio.")
-    argumentos.add_argument('movimentacao_cliente_id', type=str, required=True, help="cliente deve ser informado.")
+argumentos = reqparse.RequestParser()
+argumentos.add_argument('movimentacao_origem', type=str, required=True, help="origem do pagamento não pode estar vazia.")
+argumentos.add_argument('movimentacao_valor', type=float, required=True, help="valor do pagamento não pode estar vazio.")
+argumentos.add_argument('movimentacao_parcela', type=str, required=False)
+argumentos.add_argument('movimentacao_vencimento', type=str, required=False)
+argumentos.add_argument('movimentacao_transacao', type=str, required=False)
+argumentos.add_argument('movimentacao_tipo', type=str, required=True, help="tipo de pagamento não pode estar vazio.")
+argumentos.add_argument('movimentacao_cliente_id', type=str, required=True, help="cliente deve ser informado.")
 
+
+class Movimentacao(Resource):
     def get(self, movimentacao_id):
         movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
         if movimentacao:
             return movimentacao.json()
         return {'message': 'Movimentação não encontrada.'}, 404  # Not Found
 
-    def post(self, movimentacao_id):
-        if MovimentacaoModel.achar_movimentacao(movimentacao_id):
-            return {"message": "Id de movimentação '{}' Já existe.".format(movimentacao_id)}, 400  # bad request
-        data = Movimentacao.argumentos.parse_args()
-        movimentacao = MovimentacaoModel(movimentacao_id, **data)
-        try:
-            movimentacao.salvar_movimentacao()
-        except 'ERR1000':
-            return {'message': "Erro ao tentar salvar os dados"}, 500
-        return movimentacao.json()
-
-    def put(self, movimentacao_id):
-        data = Movimentacao.argumentos.parse_args()
-        movimentacao_encontrado = MovimentacaoModel.achar_movimentacao(movimentacao_id)
-        if movimentacao_encontrado:
-            movimentacao_encontrado.atualizar_movimentacao(**data)
-            movimentacao_encontrado.salvar_movimentacao()
-            return movimentacao_encontrado.json(), 200  # OK
-        movimentacao = MovimentacaoModel(movimentacao_id, **data)
-        try:
-            movimentacao.salvar_movimentacao()
-        except 'ERR1000':
-            return {'message': "Erro ao tentar salvar os dados"}, 500
-        return movimentacao.json(), 201  # created
-
-
-    def delete(self, movimentacao_id):
-        movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
-        if movimentacao:
-            try:
-                movimentacao.deletar_movimentacao()
-            except 'ERR1001':
-                {'message': "Erro ao tentar deletar os dados"}, 500
-            return {'message': 'Cobrança deletada com sucesso.'}
-        return {'message': 'Cobrança não encontrada.'}, 404  # not Found
-
-
-    def delete(self, movimentacao_id):
-        movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
-        if movimentacao:
-            try:
-                movimentacao.deletar_movimentacao()
-            except 'ERR1001':
-                {'message': "Erro ao tentar deletar os dados"}, 500
-            return {'message': 'Cobrança deletada com sucesso.'}
-        return {'message': 'Cobrança não encontrada.'}, 404  # not Found
-
-
-    def delete(self, movimentacao_id):
-        movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
-        if movimentacao:
-            try:
-                movimentacao.deletar_movimentacao()
-            except 'ERR1001':
-                {'message': "Erro ao tentar deletar os dados"}, 500
-            return {'message': 'Cobrança deletada com sucesso.'}
-        return {'message': 'Cobrança não encontrada.'}, 404  # not Found
-
+    def post(self):
+        data = argumentos.parse_args()
+        print(data)
+        mov = MovimentacaoModel(**data)
+        mov.salvar_movimentacao()
+        return make_response(render_template("index.html", message="Movimentação cadastrada com sucesso!"), 201)
 
     def delete(self, movimentacao_id):
         movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)

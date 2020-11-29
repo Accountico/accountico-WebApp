@@ -11,10 +11,9 @@ class MovimentacaoModel(banco.Model):
     movimentacao_vencimento = banco.Column(banco.String(10))
     movimentacao_transacao = banco.Column(banco.String(20))
     movimentacao_tipo = banco.Column(banco.String(25))
-    movimentacao_cliente_id = banco.Column(banco.String)
+    movimentacao_cliente_id = banco.Column(banco.String())
 
-    def __init__(self, movimentacao_id, movimentacao_origem, movimentacao_valor, movimentacao_parcela, movimentacao_vencimento, movimentacao_transacao, movimentacao_tipo, movimentacao_cliente_id):
-        self.movimentacao_id = movimentacao_id
+    def __init__(self, movimentacao_origem, movimentacao_valor, movimentacao_parcela, movimentacao_vencimento, movimentacao_transacao, movimentacao_tipo, movimentacao_cliente_id):
         self.movimentacao_origem = movimentacao_origem
         self.movimentacao_valor = movimentacao_valor
         self.movimentacao_parcela = movimentacao_parcela
@@ -42,21 +41,9 @@ class MovimentacaoModel(banco.Model):
             return movimentacao
         return None
 
-
-    def atualizar_movimentacao(self, movimentacao_origem, movimentacao_valor, movimentacao_parcela, movimentacao_vencimento, movimentacao_transacao, movimentacao_tipo, movimentacao_cliente_id):
-        self.movimentacao_origem = movimentacao_origem
-        self.movimentacao_valor = movimentacao_valor
-        self.movimentacao_parcela = movimentacao_parcela
-        self.movimentacao_vencimento = movimentacao_vencimento
-        self.movimentacao_transacao = movimentacao_transacao
-        self.movimentacao_tipo = movimentacao_tipo
-        self.movimentacao_cliente_id = movimentacao_cliente_id
-
-
     def salvar_movimentacao(self):
         banco.session.add(self)
         banco.session.commit()
-
 
     def deletar_movimentacao(self):
         banco.session.delete(self)

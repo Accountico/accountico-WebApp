@@ -65,12 +65,13 @@ def login_ok(req):
     user = UserModel.achar_por_login(login)
     return user is not None and safe_str_cmp(user.usuario_senha, senha)
 
+
 api.add_resource(Clientes, '/clientes')
 api.add_resource(Cliente, '/clientes/<string:cliente_id>')
 api.add_resource(Cobrancas, '/cobrancas')
 api.add_resource(Cobranca, '/cobrancas/<string:cobranca_id>')
 api.add_resource(Movimentacoes, '/movimentacoes')
-api.add_resource(Movimentacao, '/movimentacoes/<string:movimentacao_id>')
+api.add_resource(Movimentacao, '/movimentacao')
 api.add_resource(Orcamentos, '/orcamentos')
 api.add_resource(Orcamento, '/orcamentos/<string:orcamentos_id>')
 api.add_resource(Servicos, '/servicos')
