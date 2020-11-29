@@ -81,22 +81,23 @@ p {
     font-size: 3rem;
 }
 
-label {
-    color: (0, 0, 0, .25);
-}
-
 .Register-Field:focus {
     box-shadow: 0 4px 4px rgba(0, 0, 0, .5);
     outline: none;
 }
 
-.Register-Error {
-    margin-left: .5rem;
-    margin-top: .5rem;
+.Register-Error{
+    padding-top:5px;
+    padding-bottom: 2px;
+    font-weight: bold;
+    font-family: "Lucida Sans Unicode";
+    display: block;
+    text-align: center;
     color: red;
 }
 
 .Register-Btn {
+    padding-top: 5px;
     border-radius: 5px;
     position: relative;
     display: block;
