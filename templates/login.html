@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>Accountico</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/login.css') }}"></link>
+</head>
+
+
+<body>
+    <div class="Login-Geral">
+        <div class="Login-Box"> 
+            <img id="background" src="{{ url_for('static', filename='images/accounticoLogo.png') }}" alt="Background. Imagem de calculadora"></img>
+            <form action="/login" method="POST" class="Login">
+                <h1 class="title">Faça seu login</h1>
+
+                <input type="text" class="Login-Field" id="email" name="usuario_login" placeholder="Seu email..."/>
+                <input type ="password" class="Login-Field" id="password" name="usuario_senha" placeholder="Sua senha..."/>
+                {% if message != "" %}
+                    <label class="label-usuario">Usuário ou senha incorreto</label>
+                {% endif %}
+                <button type ="submit" class="Login-Btn"  value="Enviar">Entrar</button>
+                <a class="cadastrar" href="/register">Não tenho cadastro</a>
+            </form>
+        </div>
+        <div class="Login-Image">
+            <img id="background" src="{{ url_for('static', filename='images/background.jpg') }}" alt="Background. Imagem de calculadora"></img>
+        </div>
+    </div>
+</body>
+</html>

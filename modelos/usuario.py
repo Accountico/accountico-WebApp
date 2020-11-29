@@ -9,7 +9,6 @@ class UserModel(banco.Model):
     usuario_nome = banco.Column(banco.String(15))
     usuario_sobrenome = banco.Column(banco.String(20))
 
-
     def __init__(self, usuario_nome, usuario_sobrenome, usuario_login, usuario_senha):
         self.usuario_login = usuario_login
         self.usuario_senha = usuario_senha
@@ -23,7 +22,6 @@ class UserModel(banco.Model):
             'usuario_senha': self.usuario_senha,
             'usuario_nome': self.usuario_nome,
             'usuario_sobrenome': self.usuario_sobrenome
-
         }
 
     @classmethod

@@ -1,15 +1,15 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, request
 from flask_restful import Api
-# from werkzeug.security import safe_str_cmp
-from flask_jwt_extended import create_access_token
 from recursos.cliente import Clientes, Cliente
 from recursos.cobranca import Cobrancas, Cobranca
 from recursos.movimentacao import Movimentacoes, Movimentacao
 from recursos.orcamento import Orcamentos, Orcamento
 from recursos.servico import Servicos, Servico
 from recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout
+from modelos.usuario import UserModel
 from flask_jwt_extended import JWTManager
 from blacklist import BLACKLIST
+from werkzeug.security import safe_str_cmp
 # from config_json import DATABASE_URL
 
 
@@ -37,6 +37,33 @@ def verifica_blacklist(token):
 def token_acesso_invalidado():
     return jsonify({'message': 'You have been logged out.'}), 401
 
+
+@app.route('/')
+def login():
+    if login_ok(request):
+        return render_template("index.html")
+    return render_template('login.html', message="")
+
+
+@app.route('/register')
+def register():
+    if login_ok(request):
+        return render_template("index.html")
+    return render_template('register.html')
+
+
+@app.route('/home')
+def home():
+    if login_ok(request):
+        return render_template("index.html")
+    return render_template("login.html", message="sem autorização")
+
+
+def login_ok(req):
+    login = req.cookies.get("login")
+    senha = req.cookies.get("senha")
+    user = UserModel.achar_por_login(login)
+    return user is not None and safe_str_cmp(user.usuario_senha, senha)
 
 api.add_resource(Clientes, '/clientes')
 api.add_resource(Cliente, '/clientes/<string:cliente_id>')

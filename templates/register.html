@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Registro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/Register.css') }}"></link>
+    </link>
+</head>
+
+<body>
+    <div class='linha'>
+        <div class='coluna-50'>
+            <img id="background" src="{{ url_for('static', filename='images/accounticoLogo.png') }}" alt="Background. Imagem de calculadora"></img>
+            <strong>
+                <h1 class='txt'>Cadastro</h1>
+            </strong>
+            <strong>
+                <p>Entre para a sua melhor gestão financeira</p>
+            </strong>
+        </div>
+        <div class='coluna-50'>
+            <form class="Register">
+                <div class="Register-group">
+                    <h3 class="title">Cadastre-se</h3>
+                    <input type='text' name='usuario_nome' placeholder='Nome' class="Register-Field" />
+                    <input type='text' name='usuario_sobrenome' placeholder='Sobrenome' class="Register-Field"></input>
+                    <input type='email' name='usuario_login' placeholder='Email' class="Register-Field"></input>
+                    <input type='password' name='usuario_senha' placeholder='Senha' class="Register-Field"></input>
+
+                    <button type="submit" class="Register-Btn">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+.Register{
+    flex: 1 1 100%;
+    position: relative;
+}
+
+.Register-Field {
+    border: 0.15rem solid black;
+    background: white;
+    color: black;
+    padding: 1rem;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    width: 100%;
+    transition: all .1s linear;
+    border-color: lightgray;
+    position: center;
+    margin: 0 0 10px;
+}
+
+.Register-group {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 35px;
+    padding-top: 25px;
+}
+
+.Register-group input{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.linha {
+    display: flex;
+    flex-flow: row wrap;
+    background-color: white;
+    position: relative;
+
+}
+
+.coluna-50 {
+    padding-top: 50px;
+    padding-left: 40px;
+    width: 40%;
+
+}
+
+#logo {
+    max-width: 40%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5vw;
+}
+
+p {
+    color: black;
+    text-align: center;
+    font-size: 2rem;
+
+}
+
+#logo {
+    max-width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5vw;
+}
+
+#background {
+    padding: 0;
+    max-height: 100vh;
+    max-width: 100%;
+    opacity: 50%;
+}
+
+.txt {
+    text-align: center;
+    color: #6719E7;
+    font-size: 3rem;
+}
+
+label {
+    color: (0, 0, 0, .25);
+}
+
+.Register-Field:focus {
+    box-shadow: 0 4px 4px rgba(0, 0, 0, .5);
+    outline: none;
+}
+
+.Register-Error {
+    margin-left: .5rem;
+    margin-top: .5rem;
+    color: red;
+}
+
+.Register-Btn {
+    border-radius: 5px;
+    position: relative;
+    display: block;
+    width: 108%;
+    background: #6719E7;
+    color: #fdfdfd;
+    padding: .5rem 2rem;
+    border-radius: 5px;
+    margin-top: 0rem;
+}
+
+.Register-Btn:hover {
+    cursor: pointer;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    color: #6719E7;
+    padding: 0;
+    margin-left: 7%;
+    font-weight: bold;
+    font-family: "Lucida Sans Unicode";
+}

@@ -1,3 +1,5 @@
+from flask.helpers import make_response
+from flask import render_template
 from flask_restful import Resource, reqparse
 from modelos.usuario import UserModel
 from flask_jwt_extended import create_access_token, jwt_required, get_raw_jwt
@@ -47,14 +49,19 @@ class UsuarioLogin(Resource):
         data = atributos_login.parse_args()
         user = UserModel.achar_por_login(data['usuario_login'])
         if user and safe_str_cmp(user.usuario_senha, data['usuario_senha']):
-            token_acesso = create_access_token(identity=user.usuario_id)
-            return {'access_token': token_acesso}, 200
-        return {'message': 'O usuario ou a senha esta incorreta.'}, 401
+            # token_acesso = create_access_token(identity=user.usuario_id)
+            r = make_response(render_template("index.html"))
+            r.set_cookie("login", data['usuario_login'], samesite="Strict")
+            r.set_cookie("senha", data['usuario_senha'], samesite="Strict")
+            return r
+        return make_response(render_template("login.html", message="usuario ou senha incorreta"), 401)
 
 
 class UsuarioLogout(Resource):
-    @jwt_required
     def post(self):
-        jwt_id = get_raw_jwt()['jti']  # JWT Token Identifier
-        BLACKLIST.add(jwt_id)
-        return {'message': 'Logout realizado com sucesso.'}, 200
+        r = make_response(render_template("login.html", message="deslogou com sucesso!"))
+        r.set_cookie("login", "")
+        r.set_cookie("senha", "")
+        # jwt_id = get_raw_jwt()['jti']  # JWT Token Identifier
+        # BLACKLIST.add(jwt_id)
+        return r
