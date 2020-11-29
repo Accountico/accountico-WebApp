@@ -24,7 +24,6 @@ class Usuario(Resource):
             return user.json()
         return {'message': 'User not Found.'}, 404  # Not Found
 
-    @jwt_required
     def delete(self, usuario_id):
         user = UserModel.achar_usuario(usuario_id)
         if user:
@@ -37,10 +36,10 @@ class UsuarioRegistro(Resource):
     def post(self):
         data = atributos.parse_args()
         if UserModel.achar_por_login(data['usuario_login']):
-            return {"message": "login '{}' já existente.".format(data['usuario_login'])}
+            return make_response(render_template("register.html", message="Usuario já cadastrado!"), 409)
         user = UserModel(**data)
         user.salvar_usuario()
-        return {'message': 'Usuario cadastrado com sucesso!'}, 201,  # created
+        return make_response(render_template("login.html", message="Usuario cadastrado com sucesso!"), 201)
 
 
 class UsuarioLogin(Resource):
@@ -54,12 +53,12 @@ class UsuarioLogin(Resource):
             r.set_cookie("login", data['usuario_login'], samesite="Strict")
             r.set_cookie("senha", data['usuario_senha'], samesite="Strict")
             return r
-        return make_response(render_template("login.html", message="usuario ou senha incorreta"), 401)
+        return make_response(render_template("login.html", message="Usuário ou senha incorreta"), 401)
 
 
 class UsuarioLogout(Resource):
     def post(self):
-        r = make_response(render_template("login.html", message="deslogou com sucesso!"))
+        r = make_response(render_template("login.html", message="Deslogou com sucesso!"))
         r.set_cookie("login", "")
         r.set_cookie("senha", "")
         # jwt_id = get_raw_jwt()['jti']  # JWT Token Identifier

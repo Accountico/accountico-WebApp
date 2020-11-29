@@ -19,17 +19,17 @@
             </strong>
         </div>
         <div class='coluna-50'>
-            <form class="Register">
+            <form class="Register" action="/cadastro" method="POST">
                 <div class="Register-group">
-                    <h3 class="title">Cadastre-se</h3>
+                    <h3 class="title">Crie sua conta</h3>
                     <input type='text' name='usuario_nome' placeholder='Nome' class="Register-Field" />
                     <input type='text' name='usuario_sobrenome' placeholder='Sobrenome' class="Register-Field"></input>
                     <input type='email' name='usuario_login' placeholder='Email' class="Register-Field"></input>
                     <input type='password' name='usuario_senha' placeholder='Senha' class="Register-Field"></input>
 
-                    <button type="submit" class="Register-Btn">Registrar</button>
+                    <button type="submit" class="Register-Btn">Cadastre-se</button>
                     {% if message != "" %}
-                        <label class="Register-Error">Usuário ou senha incorreto</label>
+                        <label class="Register-Error">{{message}}</label>
                     {% endif %}
                 </div>
             </form>

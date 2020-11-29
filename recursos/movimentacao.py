@@ -1,6 +1,5 @@
 from flask_restful import Resource, reqparse
 from modelos.movimentacao import MovimentacaoModel
-from flask_jwt_extended import jwt_required
 import psycopg2
 
 
@@ -75,7 +74,6 @@ class Movimentacao(Resource):
             return movimentacao.json()
         return {'message': 'Movimentação não encontrada.'}, 404  # Not Found
 
-    @jwt_required
     def post(self, movimentacao_id):
         if MovimentacaoModel.achar_movimentacao(movimentacao_id):
             return {"message": "Id de movimentação '{}' Já existe.".format(movimentacao_id)}, 400  # bad request
@@ -87,7 +85,6 @@ class Movimentacao(Resource):
             return {'message': "Erro ao tentar salvar os dados"}, 500
         return movimentacao.json()
 
-    @jwt_required
     def put(self, movimentacao_id):
         data = Movimentacao.argumentos.parse_args()
         movimentacao_encontrado = MovimentacaoModel.achar_movimentacao(movimentacao_id)
@@ -102,7 +99,40 @@ class Movimentacao(Resource):
             return {'message': "Erro ao tentar salvar os dados"}, 500
         return movimentacao.json(), 201  # created
 
-    @jwt_required
+
+    def delete(self, movimentacao_id):
+        movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
+        if movimentacao:
+            try:
+                movimentacao.deletar_movimentacao()
+            except 'ERR1001':
+                {'message': "Erro ao tentar deletar os dados"}, 500
+            return {'message': 'Cobrança deletada com sucesso.'}
+        return {'message': 'Cobrança não encontrada.'}, 404  # not Found
+
+
+    def delete(self, movimentacao_id):
+        movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
+        if movimentacao:
+            try:
+                movimentacao.deletar_movimentacao()
+            except 'ERR1001':
+                {'message': "Erro ao tentar deletar os dados"}, 500
+            return {'message': 'Cobrança deletada com sucesso.'}
+        return {'message': 'Cobrança não encontrada.'}, 404  # not Found
+
+
+    def delete(self, movimentacao_id):
+        movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
+        if movimentacao:
+            try:
+                movimentacao.deletar_movimentacao()
+            except 'ERR1001':
+                {'message': "Erro ao tentar deletar os dados"}, 500
+            return {'message': 'Cobrança deletada com sucesso.'}
+        return {'message': 'Cobrança não encontrada.'}, 404  # not Found
+
+
     def delete(self, movimentacao_id):
         movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
         if movimentacao:

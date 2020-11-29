@@ -42,9 +42,6 @@ class MovimentacaoModel(banco.Model):
             return movimentacao
         return None
 
-    def salvar_movimentacao(self):
-        banco.session.add(self)
-        banco.session.commit()
 
     def atualizar_movimentacao(self, movimentacao_origem, movimentacao_valor, movimentacao_parcela, movimentacao_vencimento, movimentacao_transacao, movimentacao_tipo, movimentacao_cliente_id):
         self.movimentacao_origem = movimentacao_origem
@@ -55,18 +52,11 @@ class MovimentacaoModel(banco.Model):
         self.movimentacao_tipo = movimentacao_tipo
         self.movimentacao_cliente_id = movimentacao_cliente_id
 
-    def somar_movimentacao(self, movimentacao_id, movimentacao_valor):
-        if not(self.achar_movimentacao(movimentacao_id)):
-            return {'message': 'erro, movimentação não existente.'}, 404
-        self.movimentacao_valor += movimentacao_valor
-        return {'message': 'valor adicionado com sucesso!'}, 200
 
-    def subtrair_movimentacao(self, id, num):
-        if self.achar_movimentacao(id):
-            self.movimentacao_valor -= num
-            banco.session.commit()
-            return {'message': 'valor subtraido com sucesso!'}, 200
-        return {'message': 'erro, movimentação não existente.'}, 404
+    def salvar_movimentacao(self):
+        banco.session.add(self)
+        banco.session.commit()
+
 
     def deletar_movimentacao(self):
         banco.session.delete(self)
