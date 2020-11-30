@@ -42,15 +42,15 @@ def token_acesso_invalidado():
 @app.route('/')
 def login():
     if login_ok(request):
-        return render_template("index.html")
+        return render_template("login.html")
     return render_template('login.html', message="")
 
 
 @app.route('/register')
 def register():
     if login_ok(request):
-        return render_template("login.html")
-    return render_template('register.html')
+        return render_template("register.html")
+    return render_template('login.html')
 
 
 @app.route('/home')
