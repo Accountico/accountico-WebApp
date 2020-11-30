@@ -79,7 +79,6 @@ class Movimentacao(Resource):
 
     def post(self):
         data = argumentos.parse_args()
-        print(data)
         mov = MovimentacaoModel(**data)
         mov.salvar_movimentacao()
         return make_response(render_template("index.html", message="Movimentação cadastrada com sucesso!"), 201)
