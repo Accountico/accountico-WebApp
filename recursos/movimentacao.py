@@ -5,10 +5,10 @@ from modelos.movimentacao import MovimentacaoModel
 import psycopg2
 
 
-def normal_parametros(movimentacao_cliente_id=None, valor_min=0, valor_max=9999999999, limit=50, offset=0, **data):
-    if movimentacao_cliente_id:
+def normal_parametros(movimentacao_destino=None, valor_min=0, valor_max=9999999999, limit=50, offset=0, **data):
+    if movimentacao_destino:
         return {
-            'movimentacao_cliente_id': movimentacao_cliente_id,
+            'movimentacao_destino': movimentacao_destino,
             'valor_min': valor_min,
             'valor_max': valor_max,
             'limit': limit,
@@ -21,11 +21,46 @@ def normal_parametros(movimentacao_cliente_id=None, valor_min=0, valor_max=99999
 
 
 path_parametro = reqparse.RequestParser()
-path_parametro.add_argument('movimentacao_cliente_id', type=str)
+path_parametro.add_argument('movimentacao_destino', type=str)
 path_parametro.add_argument('valor_min', type=float)
 path_parametro.add_argument('valor_max', type=float)
 path_parametro.add_argument('limit', type=float)
 path_parametro.add_argument('offset', type=float)
+
+
+def total_parametros(movimentacao_destino=None, valor_min=0, valor_max=9999999999, **data):
+    if movimentacao_destino:
+        return {
+            'movimentacao_destino': movimentacao_destino,
+            'valor_min': valor_min,
+            'valor_max': valor_max}
+    return {
+        'valor_min': valor_min,
+        'valor_max': valor_max}
+
+
+pathy_parametro = reqparse.RequestParser()
+pathy_parametro.add_argument('movimentacao_destino', type=str)
+
+
+class TotalMovimentos(Resource):
+    def get(self):
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
+        cursor = connection.cursor()
+        data = pathy_parametro.parse_args()
+        validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
+        parametro = total_parametros(**validar_data)
+        if not parametro.get('movimentacao_valor'):
+            consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
+            tupla = tuple([parametro[chave] for chave in parametro])
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
+        else:
+            consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
+            tupla = tuple([parametro[chave] for chave in parametro])
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
+        return resultado
 
 
 class Movimentacoes(Resource):
@@ -35,13 +70,13 @@ class Movimentacoes(Resource):
         data = path_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = normal_parametros(**validar_data)
-        if not parametro.get('movimentacao_cliente_id'):
-            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_valor >= %s) and (movimentacao_valor <= %s) LIMIT %s OFFSET %s"
+        if not parametro.get('movimentacao_destino'):
+            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_valor >= %s) and (movimentacao_valor <= %s) ORDER BY movimentacao_id ASC LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
             cursor.execute(consulta, tupla)
             resultado = cursor.fetchall()
         else:
-            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_cliente_id = %s) and (movimentacao_valor >= %s) and (movimentacao_valor <= %s) LIMIT %s OFFSET %s"
+            consulta = "SELECT * FROM movimentacoes WHERE (movimentacao_destino = %s) and (movimentacao_valor >= %s) and (movimentacao_valor <= %s) ORDER BY movimentacao_id ASC LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
             cursor.execute(consulta, tupla)
             resultado = cursor.fetchall()
@@ -50,24 +85,18 @@ class Movimentacoes(Resource):
             for linha in resultado:
                 movimentacoes.append({
                     'movimentacao_id': linha[0],
-                    'movimentacao_origem': linha[1],
-                    'movimentacao_valor': linha[2],
-                    'movimentacao_parcela': linha[3],
-                    'movimentacao_vencimento': linha[4],
-                    'movimentacao_transacao': linha[5],
-                    'movimentacao_tipo': linha[6],
-                    'movimentacao_cliente_id': linha[7]})
+                    'movimentacao_nome': linha[1],
+                    'movimentacao_descricao': linha[2],
+                    'movimentacao_destino': linha[3],
+                    'movimentacao_valor': linha[4]})
             return {'movimentacoes': movimentacoes}
 
 
 argumentos = reqparse.RequestParser()
-argumentos.add_argument('movimentacao_origem', type=str, required=True, help="origem do pagamento não pode estar vazia.")
-argumentos.add_argument('movimentacao_valor', type=float, required=True, help="valor do pagamento não pode estar vazio.")
-argumentos.add_argument('movimentacao_parcela', type=str, required=False)
-argumentos.add_argument('movimentacao_vencimento', type=str, required=False)
-argumentos.add_argument('movimentacao_transacao', type=str, required=False)
-argumentos.add_argument('movimentacao_tipo', type=str, required=True, help="tipo de pagamento não pode estar vazio.")
-argumentos.add_argument('movimentacao_cliente_id', type=str, required=True, help="cliente deve ser informado.")
+argumentos.add_argument('movimentacao_nome', type=str, required=True, help="Campo 'Nome da transação' não pode estar vazio!")
+argumentos.add_argument('movimentacao_descricao', type=str, required=False)
+argumentos.add_argument('movimentacao_destino', type=str, required=True, help="Campo 'Destino' não pode estar vazio!")
+argumentos.add_argument('movimentacao_valor', type=float, required=True, help="Campo 'Valor' não pode estar vazio!")
 
 
 class Movimentacao(Resource):
@@ -75,20 +104,22 @@ class Movimentacao(Resource):
         movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
         if movimentacao:
             return movimentacao.json()
-        return {'message': 'Movimentação não encontrada.'}, 404  # Not Found
+        return make_response(render_template("moviments.html", message="Movimentação não encontrada."), 404)
 
     def post(self):
         data = argumentos.parse_args()
         mov = MovimentacaoModel(**data)
         mov.salvar_movimentacao()
-        return make_response(render_template("index.html", message="Movimentação cadastrada com sucesso!"), 201)
+        return make_response(render_template("moviments.html", message="Movimentação cadastrada com sucesso!"), 201)
 
+
+class Movimento(Resource):
     def delete(self, movimentacao_id):
         movimentacao = MovimentacaoModel.achar_movimentacao(movimentacao_id)
         if movimentacao:
             try:
                 movimentacao.deletar_movimentacao()
             except 'ERR1001':
-                {'message': "Erro ao tentar deletar os dados"}, 500
-            return {'message': 'Cobrança deletada com sucesso.'}
-        return {'message': 'Cobrança não encontrada.'}, 404  # not Found
+                make_response(render_template("moviments.html", message=" Erro ao tentar deletar os dados."), 500)
+            return make_response(render_template("moviments.html", message="Cobrança deletada com sucesso!"), 200)
+        return make_response(render_template("moviments.html", message="Cobrança não encontrada."), 404)

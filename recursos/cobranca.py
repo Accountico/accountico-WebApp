@@ -1,22 +1,30 @@
+from flask.helpers import make_response
+from flask.templating import render_template
 from flask_restful import Resource, reqparse
 from modelos.cobranca import CobrancaModel
 from flask_jwt_extended import jwt_required
 import psycopg2
 
 
-def normal_parametros(cobranca_orcamento_id=None, limit=50, offset=0, **data):
-    if cobranca_orcamento_id:
+def normal_parametros(cobranca_remetente=None, valor_min=0, valor_max=9999999999, limit=50, offset=0, **data):
+    if cobranca_remetente:
         return {
-            'cobranca_orcamento_id': cobranca_orcamento_id,
+            'cobranca_remetente': cobranca_remetente,
+            'valor_min': valor_min,
+            'valor_max': valor_max,
             'limit': limit,
             'offset': offset}
     return {
+        'valor_min': valor_min,
+        'valor_max': valor_max,
         'limit': limit,
         'offset': offset}
 
 
 path_parametro = reqparse.RequestParser()
-path_parametro.add_argument('cobranca_orcamento_id', type=str)
+path_parametro.add_argument('cobranca_remetente', type=str)
+path_parametro.add_argument('valor_min', type=float)
+path_parametro.add_argument('valor_max', type=float)
 path_parametro.add_argument('limit', type=float)
 path_parametro.add_argument('offset', type=float)
 
@@ -28,13 +36,13 @@ class Cobrancas(Resource):
         data = path_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = normal_parametros(**validar_data)
-        if not parametro.get('cobranca_orcamento_id'):
-            consulta = "SELECT * FROM cobrancas LIMIT %s OFFSET %s"
+        if not parametro.get('cobranca_remetente'):
+            consulta = "SELECT * FROM cobrancas WHERE (cobranca_valor >= %s) and (cobranca_valor <= %s) ORDER BY cobranca_id ASC LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
             cursor.execute(consulta, tupla)
             resultado = cursor.fetchall()
         else:
-            consulta = "SELECT * FROM cobrancas WHERE (cobranca_orcamento_id = %s) LIMIT %s OFFSET %s"
+            consulta = "SELECT * FROM cobrancas WHERE (cobranca_remetente = %s) and (cobranca_valor >= %s) and (cobranca_valor <= %s) ORDER BY cobranca_id ASC LIMIT %s OFFSET %s"
             tupla = tuple([parametro[chave] for chave in parametro])
             cursor.execute(consulta, tupla)
             resultado = cursor.fetchall()
@@ -43,58 +51,70 @@ class Cobrancas(Resource):
             for linha in resultado:
                 cobrancas.append({
                     'cobranca_id': linha[0],
-                    'cobranca_banco': linha[1],
-                    'cobranca_vencimento': linha[2],
-                    'cobranca_pagamento': linha[3],
-                    'cobranca_observacao': linha[4],
-                    'cobranca_valor': linha[5],
-                    'cobranca_orcamento_id': linha[6]})
+                    'cobranca_nome': linha[1],
+                    'cobranca_descricao': linha[2],
+                    'cobranca_remetente': linha[3],
+                    'cobranca_valor': linha[4]})
             return {'cobrancas': cobrancas}
 
 
-class Cobranca(Resource):
-    argumentos = reqparse.RequestParser()
-    argumentos.add_argument('cobranca_banco', type=str, required=True, help="nome do banco não pode estar vazio.")
-    argumentos.add_argument('cobranca_vencimento', type=str, required=False)
-    argumentos.add_argument('cobranca_pagamento', type=str, required=False)
-    argumentos.add_argument('cobranca_observacao', type=str, required=False)
-    argumentos.add_argument('cobranca_valor', type=str, required=True, help="valor da cobrança não pode estar vazio")
-    argumentos.add_argument('cobranca_orcamento_id', type=str, required=True, help="numero do orçamento deve ser informado")
+def total_parametros(cobranca_remetente=None, valor_min=0, valor_max=9999999999, **data):
+    if cobranca_remetente:
+        return {
+            'cobranca_remetente': cobranca_remetente,
+            'valor_min': valor_min,
+            'valor_max': valor_max}
+    return {
+        'valor_min': valor_min,
+        'valor_max': valor_max}
 
+
+pathy_parametro = reqparse.RequestParser()
+pathy_parametro.add_argument('cobranca_remetente', type=str)
+
+
+class TotalCobrancas(Resource):
+    def get(self):
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
+        cursor = connection.cursor()
+        data = pathy_parametro.parse_args()
+        validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
+        parametro = total_parametros(**validar_data)
+        if not parametro.get('cobranca_valor'):
+            consulta = "SELECT SUM(cobranca_valor) FROM cobrancas AS total"
+            tupla = tuple([parametro[chave] for chave in parametro])
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
+        else:
+            consulta = "SELECT SUM(cobranca_valor) FROM cobrancas AS 'valor_total'"
+            tupla = tuple([parametro[chave] for chave in parametro])
+            cursor.execute(consulta, tupla)
+            resultado = cursor.fetchall()
+        return resultado
+
+
+argumentos = reqparse.RequestParser()
+argumentos.add_argument('cobranca_nome', type=str, required=True, help="Campo 'Nome da transação' não pode estar vazio.")
+argumentos.add_argument('cobranca_descricao', type=str, required=False)
+argumentos.add_argument('cobranca_remetente', type=str, required=True, help="Campo 'Remetente' não pode estar vazio.")
+argumentos.add_argument('cobranca_valor', type=float, required=True, help="Campo 'Valor' não pode estar vazio.")
+
+
+class Cobranca(Resource):
     def get(self, cobranca_id):
         cobranca = CobrancaModel.achar_cobranca(cobranca_id)
         if cobranca:
             return cobranca.json()
-        return {'message': 'Cobrança não encontrada.'}, 404  # Not Found
+        return make_response(render_template("charges.html", message="Cobrança não encontrada."), 404)
 
-    @jwt_required
-    def post(self, cobranca_id):
-        if CobrancaModel.achar_cobranca(cobranca_id):
-            return {"message": "Id de cobrança '{}' Já existe.".format(cobranca_id)}, 400  # bad request
-        data = Cobranca.argumentos.parse_args()
-        cobranca = CobrancaModel(cobranca_id, **data)
-        try:
-            cobranca.salvar_cobranca()
-        except 'ERR1000':
-            return {'message': "Erro ao tentar salvar os dados"}, 500
-        return cobranca.json()
+    def post(self):
+        data = argumentos.parse_args()
+        cobranca = CobrancaModel(**data)
+        cobranca.salvar_cobranca()
+        return make_response(render_template("charges.html", message="Cobrança cadastrada com sucesso!"), 201)
 
-    @jwt_required
-    def put(self, cobranca_id):
-        data = Cobranca.argumentos.parse_args()
-        cobranca_encontrado = CobrancaModel.achar_cobranca(cobranca_id)
-        if cobranca_encontrado:
-            cobranca_encontrado.atualizar_cobranca(**data)
-            cobranca_encontrado.salvar_cobranca()
-            return cobranca_encontrado.json(), 200  # OK
-        cobranca = CobrancaModel(cobranca_id, **data)
-        try:
-            cobranca.salvar_cobranca()
-        except 'ERR1000':
-            return {'message': "Erro ao tentar salvar os dados"}, 500
-        return cobranca.json(), 201  # created
 
-    @jwt_required
+class Cobrar(Resource):
     def delete(self, cobranca_id):
         cobranca = CobrancaModel.achar_cobranca(cobranca_id)
         if cobranca:

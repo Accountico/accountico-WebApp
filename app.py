@@ -2,8 +2,8 @@ from flask import Flask, jsonify, render_template, request
 from flask_restful import Api
 from recursos.cliente_cnpj import ClientesCnpj, ClienteCnpj, ClienteCnpjs
 from recursos.cliente_cpf import ClientesCpf, ClienteCpf, ClienteCpfs
-from recursos.cobranca import Cobrancas, Cobranca
-from recursos.movimentacao import Movimentacoes, Movimentacao
+from recursos.cobranca import Cobrancas, Cobranca, Cobrar, TotalCobrancas
+from recursos.movimentacao import Movimentacoes, Movimentacao, Movimento, TotalMovimentos
 from recursos.orcamento import Orcamentos, Orcamento
 from recursos.servico import Servicos, Servico
 from recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout
@@ -42,14 +42,14 @@ def token_acesso_invalidado():
 @app.route('/')
 def login():
     if login_ok(request):
-        return render_template("index.html")
+        return render_template("login.html")
     return render_template('login.html', message="")
 
 
 @app.route('/register')
 def register():
     if login_ok(request):
-        return render_template("index.html")
+        return render_template("login.html")
     return render_template("register.html")
 
 
@@ -60,10 +60,10 @@ def home():
     return render_template("login.html", message="Sem autorização.")
 
 
-@app.route('/relatorio')
+@app.route('/cobranca')
 def client():
     if login_ok(request):
-        return render_template("relatorio.html")
+        return render_template("charges.html")
     return render_template("login.html", message="Sem autorização.")
 
 
@@ -73,15 +73,18 @@ def services():
         return render_template("services.html")
     return render_template("login.html", message="Sem autorização.")
 
+@app.route('/movimentacao')
+def payments():
+    if login_ok(request):
+        return render_template("moviments.html")
+    return render_template("login.html", message="Sem autorização.")
+
 
 def login_ok(req):
     login = req.cookies.get("login")
     senha = req.cookies.get("senha")
-    print(login, senha)
     user = UserModel.achar_por_login(login)
-    x = user is not None and safe_str_cmp(user.usuario_senha, senha)
-    print(x)
-    return x
+    return user is not None and safe_str_cmp(user.usuario_senha, senha)
 
 
 api.add_resource(ClientesCpf, '/clientes-cpf')
@@ -90,10 +93,14 @@ api.add_resource(ClienteCpfs, '/clientescpfs/<string:cliente_id>')
 api.add_resource(ClientesCnpj, '/clientes-cnpj')
 api.add_resource(ClienteCnpj, '/clientescnpj')
 api.add_resource(ClienteCnpjs, '/clientescnpjs/<string:cliente_id>')
-api.add_resource(Cobrancas, '/cobrancas')
-api.add_resource(Cobranca, '/cobrancas/<string:cobranca_id>')
+api.add_resource(Cobrancas, '/cobrancas')  # GET
+api.add_resource(Cobranca, '/cobranca')  # POST
+api.add_resource(Cobrar, '/cobrar/<string:cobranca_id>') # DELETE
+api.add_resource(TotalCobrancas, '/totalcobrancas')  # GET
 api.add_resource(Movimentacoes, '/movimentacoes')
 api.add_resource(Movimentacao, '/movimentacao')
+api.add_resource(Movimento, '/movimento/<string:movimentacao_id>')
+api.add_resource(TotalMovimentos, '/totalmovimentos')
 api.add_resource(Orcamentos, '/orcamentos')
 api.add_resource(Orcamento, '/orcamentos/<string:orcamentos_id>')
 api.add_resource(Servicos, '/servicos')

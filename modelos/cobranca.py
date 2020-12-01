@@ -5,33 +5,24 @@ from sql_alchemy import banco
 class CobrancaModel(banco.Model):
     __tablename__ = 'cobrancas'
     cobranca_id = banco.Column(banco.Integer, primary_key=True)
-    cobranca_banco = banco.Column(banco.String(20))
-    cobranca_vencimento = banco.Column(banco.String(10))
-    cobranca_pagamento = banco.Column(banco.String(19))
-    cobranca_observacao = banco.Column(banco.String(200))
-    cobranca_valor = banco.Column(banco.Float(precision=2))
-    cobranca_orcamento_id = banco.Column(banco.String)
-    # cobranca_documento = banco.Column(img??.String)
+    cobranca_nome = banco.Column(banco.String(30))
+    cobranca_descricao = banco.Column(banco.String(200))
+    cobranca_remetente = banco.Column(banco.String(50))
+    cobranca_valor = banco.Column(banco.Float())
 
-    def __init__(self, cobranca_id, cobranca_banco, cobranca_vencimento, cobranca_pagamento, cobranca_observacao, cobranca_valor, cobranca_orcamento_id):
-        self.cobranca_id = cobranca_id
-        self.cobranca_banco = cobranca_banco
-        self.cobranca_vencimento = cobranca_vencimento
-        self.cobranca_pagamento = cobranca_pagamento
-        self.cobranca_observacao = cobranca_observacao
+    def __init__(self, cobranca_nome, cobranca_descricao, cobranca_remetente, cobranca_valor):
+        self.cobranca_nome = cobranca_nome
+        self.cobranca_descricao = cobranca_descricao
+        self.cobranca_remetente = cobranca_remetente
         self.cobranca_valor = cobranca_valor
-        self.cobranca_orcamento_id = cobranca_orcamento_id
-        # self.cobranca_documento = cobranca_documento
 
     def json(self):
         return {
             'cobranca_id': self.cobranca_id,
-            'cobranca_banco': self.cobranca_banco,
-            'cobranca_vencimento': self.cobranca_vencimento,
-            'cobranca_pagamento': self.cobranca_pagamento,
-            'cobranca_observacao': self.cobranca_observacao,
-            'cobranca_valor': self.cobranca_valor,
-            'cobranca_orcamento_id': self.cobranca_orcamento_id
+            'cobranca_nome': self.cobranca_nome,
+            'cobranca_descricao': self.cobranca_descricao,
+            'cobranca_remetente': self.cobranca_remetente,
+            'cobranca_valor': self.cobranca_valor
         }
 
     @classmethod

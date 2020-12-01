@@ -1,65 +1,44 @@
-  
 <!DOCTYPE html>
-<html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/index.css') }}"></link>
-    <title>Controle de despesas</title>
-  </head>
-  <body>
-    <h2>Controle de despesas</h2>
+<html lang="pt-bt">
 
-    <div class="container">
-      <h4>Saldo atual</h4>
-      
-      <h1 id="balance" class="balance">R$ 0.00</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./home.css">
+  </link>
+  <link rel="stylesheet" href="{{ url_for('static', filename= 'css/index.css') }}">
+  </link>
+</head>
 
-      <div class="inc-exp-container">
-        <div>
-          <h4>Receitas</h4>
-          <p id="money-plus" class="money plus">+ R$0.00</p>
-        </div>
+<body>
+  <div class="topnav" id="myTopnav">
+    <a href="/movimentacao">Movimentação</a>
+    <a href="/cobranca">Cobrança</a>
+    <form action="/logout" method="POST" class="Logout">
+      <button class="loggout-btn">Logout</button>
+    </form>
+  </div>
 
-        <div>
-          <h4>Despesas</h4>
-          <p id="money-minus" class="money minus">- R$0.00</p>
-        </div>
-      </div>
+  <div class='logo-home-container'>
+    <img class='logo-home' src="{{ url_for('static', filename='images/accounticoLogo.png') }}"
+      alt="Background. Imagem de calculadora"></img>
+  </div>
 
-      <h3>Transações</h3>
-      
-      <ul id="transactions" class="transactions">
-        <!-- <li class="minus">
-          Salário <span>-$400</span><button class="delete-btn">x</button>
-        </li> -->
-      </ul>
-
-      <h3>Adicionar transação</h3>
-      
-      <form id="form">
-        <div class="form-control">
-          <label for="text">Nome</label>
-          <input autofocus type="text" name="" id="text" placeholder="Nome da transação" />
-        </div>
-
-        <div class="form-control">
-          <label for="amount">Valor <br />
-            <small>(negativo - despesas, positivo - receitas)</small>
-          </label>
-          <input type="number" name="" id="amount" placeholder="Valor da transação" />
-        </div>
-
-        <button class="btn">Adicionar</button>
-      </form>
-      <a class="btn-link" href="/relatorio"><button class="btn">Exportar Relatório</button></a>
-      <form action="/logout" method="POST" class="Logout">
-        <button>Logout</button>
-      </form>
+  <div id="quad-superior" action="/totalcobrancas" method="GET">
+    <div class="container-recebimento">
+      <h2 class="pagamento">Valor a receber:<br></h2>
+      {% for x in totalcobrancas%}
+      <h2 class="pagamento">{{ x[][] }}</h2>
+      {% endfor %}
     </div>
 
-    <script src="../static/js/script.js">
-     
-    </script>
-  </body>
+    <div class="container-pagamento">
+      <h2 class="contas"> Valor a pagar:<br></h2>
+      <h2 class="contas">R$ 1.000,00</h2>
+    </div>
+  </div>
+  </div>
+</body>
+
 </html>

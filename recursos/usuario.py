@@ -20,13 +20,13 @@ class Usuario(Resource):
         user = UserModel.achar_usuario(usuario_id)
         if user:
             return user.json()
-        return {'message': 'User not Found.'}, 404  # Not Found
+        return make_response(render_template("login.html", message="Usuário não encontrado"), 404)
 
     def delete(self, usuario_id):
         user = UserModel.achar_usuario(usuario_id)
         if user:
             user.deletar_usuario()
-            return {'message': 'Usuario deletado com sucesso.'}
+            return {'message': 'Usuario deletado com sucesso.'}, 200
         return {'message': 'Usuario não encontrado.'}, 404  # not Found
 
 
@@ -51,7 +51,7 @@ class UsuarioLogin(Resource):
             r.set_cookie("login", data['usuario_login'], samesite="Strict")
             r.set_cookie("senha", data['usuario_senha'], samesite="Strict")
             return r
-        return make_response(render_template("login.html", message="Usuário ou senha incorreta."), 401)
+        return make_response(render_template("login.html", message="Usuário ou senha incorreta"), 401)
 
 
 class UsuarioLogout(Resource):

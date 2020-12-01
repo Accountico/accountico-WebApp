@@ -1,0 +1,46 @@
+  
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/payments.css') }}"></link>
+    <title>Controle de despesas</title>
+  </head>
+  <body>
+      <h2>Adicionar Movimentação</h2>
+
+      <form action="/movimentacao" method="POST"  id="form">
+        <div class="form-control">
+          <label for="text">Nome</label>
+          <input autofocus type="text" name="movimentacao_nome" id="text" placeholder="Nome da transação" />
+        </div>
+
+        <div class="form-control">
+          <label for="text">Descrição</label>
+          <input autofocus type="text" name="movimentacao_descricao" id="text" placeholder="Nome da descrição" />
+        </div>
+
+        <div class="form-control">
+          <label for="text">Destino</label>
+          <input autofocus type="text" name="movimentacao_destino" id="text" placeholder="Destino da movimentação" />
+        </div>
+
+
+        <div class="form-control">
+          <label for="amount">Valor <br />
+            <small>(Valor à pagar)</small>
+          </label>
+          <input type="number" step="0.01" name="movimentacao_valor" id="amount" placeholder="Valor da transação" />
+        </div>
+
+        <button type ="submit" class="btn" value="Enviar">Adicionar</button>
+        {% if message != "" %}
+          <label class="movimentacao-sucesso">{{message}}</label>
+        {% endif %}
+    </form>
+        <a href="/home">Voltar</a>
+    <!-- <button class="btn">Baixar Movimentações</button> -->
+    </div>
+  </body>
+</html>
