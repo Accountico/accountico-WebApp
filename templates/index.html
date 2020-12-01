@@ -28,14 +28,13 @@
   <div id="quad-superior" action="/totalcobrancas" method="GET">
     <div class="container-recebimento">
       <h2 class="pagamento">Valor a receber:<br></h2>
-      {% for x in totalcobrancas%}
-      <h2 class="pagamento">{{ x[][] }}</h2>
-      {% endfor %}
+      <h2 class="pagamento">{{ totalCobranca }}</h2>
+
     </div>
 
     <div class="container-pagamento">
       <h2 class="contas"> Valor a pagar:<br></h2>
-      <h2 class="contas">R$ 1.000,00</h2>
+      <h2 class="contas">{{ totalMovimentos }}</h2>
     </div>
   </div>
   </div>

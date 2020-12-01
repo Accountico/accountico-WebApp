@@ -52,11 +52,17 @@ def register():
         return render_template("login.html")
     return render_template("register.html")
 
+def formatar(value):
+    return f"R$ {value}"
 
 @app.route('/home')
 def home():
     if login_ok(request):
-        return render_template("index.html")
+        totalCobranca = TotalCobrancas().get()
+        totalMovimentos = TotalMovimentos().get()
+        
+        return render_template("index.html", totalCobranca = formatar(totalCobranca), 
+            totalMovimentos = formatar(totalMovimentos))
     return render_template("login.html", message="Sem autorização.")
 
 

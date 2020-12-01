@@ -77,19 +77,13 @@ class TotalCobrancas(Resource):
     def get(self):
         connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
         cursor = connection.cursor()
-        data = pathy_parametro.parse_args()
-        validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
-        parametro = total_parametros(**validar_data)
-        if not parametro.get('cobranca_valor'):
-            consulta = "SELECT SUM(cobranca_valor) FROM cobrancas AS total"
-            tupla = tuple([parametro[chave] for chave in parametro])
-            cursor.execute(consulta, tupla)
-            resultado = cursor.fetchall()
-        else:
-            consulta = "SELECT SUM(cobranca_valor) FROM cobrancas AS 'valor_total'"
-            tupla = tuple([parametro[chave] for chave in parametro])
-            cursor.execute(consulta, tupla)
-            resultado = cursor.fetchall()
+        # data = pathy_parametro.parse_args()
+        # validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
+        # parametro = total_parametros(**validar_data)
+        consulta = "SELECT SUM(cobranca_valor) FROM cobrancas AS total"
+        # tupla = tuple([parametro[chave] for chave in parametro])
+        cursor.execute(consulta)
+        resultado = cursor.fetchone()[0]
         return resultado
 
 

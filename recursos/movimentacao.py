@@ -50,16 +50,10 @@ class TotalMovimentos(Resource):
         data = pathy_parametro.parse_args()
         validar_data = {chave: data[chave] for chave in data if data[chave] is not None}
         parametro = total_parametros(**validar_data)
-        if not parametro.get('movimentacao_valor'):
-            consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
-            tupla = tuple([parametro[chave] for chave in parametro])
-            cursor.execute(consulta, tupla)
-            resultado = cursor.fetchall()
-        else:
-            consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
-            tupla = tuple([parametro[chave] for chave in parametro])
-            cursor.execute(consulta, tupla)
-            resultado = cursor.fetchall()
+        consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
+        tupla = tuple([parametro[chave] for chave in parametro])
+        cursor.execute(consulta, tupla)
+        resultado = cursor.fetchone()[0]
         return resultado
 
 
