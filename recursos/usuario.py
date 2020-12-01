@@ -51,7 +51,7 @@ class UsuarioLogin(Resource):
             r.set_cookie("login", data['usuario_login'], samesite="Strict")
             r.set_cookie("senha", data['usuario_senha'], samesite="Strict")
             return r
-        return make_response(render_template("login.html", message="Usuário ou senha incorreta"), 401)
+        return make_response(render_template("login.html", message="Usuário ou senha incorreta."), 401)
 
 
 class UsuarioLogout(Resource):

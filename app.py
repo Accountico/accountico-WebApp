@@ -42,43 +42,46 @@ def token_acesso_invalidado():
 @app.route('/')
 def login():
     if login_ok(request):
-        return render_template("login.html")
+        return render_template("index.html")
     return render_template('login.html', message="")
 
 
 @app.route('/register')
 def register():
     if login_ok(request):
-        return render_template("register.html")
-    return render_template('login.html')
+        return render_template("index.html")
+    return render_template("register.html")
 
 
 @app.route('/home')
 def home():
     if login_ok(request):
         return render_template("index.html")
-    return render_template("login.html", message="sem autorização")
+    return render_template("login.html", message="Sem autorização.")
 
 
-@app.route('/client')
+@app.route('/relatorio')
 def client():
     if login_ok(request):
-        return render_template("client.html")
-    return render_template("login.html", message="sem autorização")
+        return render_template("relatorio.html")
+    return render_template("login.html", message="Sem autorização.")
 
 
 @app.route('/services')
 def services():
     if login_ok(request):
         return render_template("services.html")
-    return render_template("login.html", message="sem autorização")
+    return render_template("login.html", message="Sem autorização.")
 
 
 def login_ok(req):
     login = req.cookies.get("login")
     senha = req.cookies.get("senha")
+    print(login, senha)
     user = UserModel.achar_por_login(login)
-    return user is not None and safe_str_cmp(user.usuario_senha, senha)
+    x = user is not None and safe_str_cmp(user.usuario_senha, senha)
+    print(x)
+    return x
 
 
 api.add_resource(ClientesCpf, '/clientes-cpf')
