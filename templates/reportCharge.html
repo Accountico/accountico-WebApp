@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Relatório de Cobrança</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/report.css') }}">
 </head>
 <body>
-    <h1>Cobrança</h1>
+    <h1 class="title">Cobrança</h1>
     <table>
         <tr>
-            <td>Id</td>
-            <td>Nome</td>
-            <td>Descrição</td>
-            <td>Destino</td>
-            <td>Valor</td>    
-            <td>Deseja Excluir?</td>
+            <td class="titulo">Id</td>
+            <td class="titulo">Nome</td>
+            <td class="titulo">Descrição</td>
+            <td class="titulo">Destino</td>
+            <td class="titulo">Valor</td>    
+            <td class="titulo">Deseja Excluir?</td>
         </tr>
-        
         {%for cobranca in cobrancas %}
         <tr>
             <td>{{ cobranca.cobranca_id }}</td>
@@ -26,11 +26,11 @@
             <td>{{ cobranca.cobranca_valor }}</td>
             
             <form action="/cobrar/" method="DELETE" >
-            <td><button>x</button></td>
+            <td><button class="btn-excluir">x</button></td>
             </form>
         </tr>
         {% endfor %}
     </table>
-    <a href="/home">Voltar</a>
+    <a class="voltar" href="/home">Voltar</a>
 </body>
 </html>

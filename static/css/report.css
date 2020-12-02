@@ -1,0 +1,52 @@
+body{
+    align-content: center;
+    text-align: center;
+}
+
+.title {
+    text-align: center;
+    color: #6A5ACD;
+    font-weight: bold;
+    font-family: "Lucida Sans Unicode";
+}
+
+table{
+    padding-left: 550px;
+}
+
+table tr td {
+    font-family: "Lucida Sans Unicode";
+    text-align: center;
+    padding: 15px;
+    border-bottom-style: solid;
+    border-bottom-color: black ;
+    border-bottom-width: 2px;
+}
+
+.titulo {
+    color: #fff;
+    background-color: #6A5ACD;
+    font-weight: bold;
+    font-family: "Lucida Sans Unicode";
+}
+
+.btn-excluir {
+    text-align: center;
+    color: #fff;
+    background-color: #FF0000;
+    border-radius: 5px;
+}
+
+.btn-excluir:hover {
+    cursor: pointer;
+}
+
+.voltar{
+    background-color: #6A5ACD;
+    color: #fff;
+    padding-top: 12px;
+    display: block;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
