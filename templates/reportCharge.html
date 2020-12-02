@@ -13,7 +13,8 @@
             <td>Nome</td>
             <td>Descrição</td>
             <td>Destino</td>
-            <td>Valor</td>            
+            <td>Valor</td>    
+            <td>Deseja Excluir?</td>
         </tr>
         
         {%for cobranca in cobrancas %}
@@ -23,8 +24,13 @@
             <td>{{ cobranca.cobranca_descricao }}</td>
             <td>{{ cobranca.cobranca_remetente }}</td>
             <td>{{ cobranca.cobranca_valor }}</td>
+            
+            <form action="/cobrar/" method="DELETE" >
+            <td><button>x</button></td>
+            </form>
         </tr>
         {% endfor %}
     </table>
+    <a href="/home">Voltar</a>
 </body>
 </html>

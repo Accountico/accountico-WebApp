@@ -13,7 +13,8 @@
             <td>Nome</td>
             <td>Descrição</td>
             <td>Destino</td>
-            <td>Valor</td>            
+            <td>Valor</td>      
+            <td>Deseja Excluir?</td>   
         </tr>
         {%for movimentacao in movimentacoes %}
         <tr>
@@ -22,8 +23,13 @@
             <td>{{ movimentacao.movimentacao_descricao }}</td>
             <td>{{ movimentacao.movimentacao_destino }}</td>
             <td>{{ movimentacao.movimentacao_valor }}</td>
+            
+            <form action="/movimentos/" method="DELETE" >
+            <td><button>x</button></td>
+            </form>
         </tr>
         {% endfor %}
     </table>
+    <a href="/home">Voltar</a>
 </body>
 </html>
