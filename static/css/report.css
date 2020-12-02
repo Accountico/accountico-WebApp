@@ -11,7 +11,8 @@ body{
 }
 
 table{
-    padding-left: 550px;
+    padding-left: 535px;
+    padding-bottom: 15px;
 }
 
 table tr td {
@@ -42,11 +43,8 @@ table tr td {
 }
 
 .voltar{
-    background-color: #6A5ACD;
-    color: #fff;
-    padding-top: 12px;
-    display: block;
-    padding: 14px 16px;
+    margin-top: 20px;
     text-decoration: none;
     font-size: 17px;
+    width: 20%;
 }
