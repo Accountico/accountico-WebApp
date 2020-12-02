@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Movimentação</h1>
+    <table>
+        <tr>
+            <td>Id</td>
+            <td>Nome</td>
+            <td>Descrição</td>
+            <td>Destino</td>
+            <td>Valor</td>            
+        </tr>
+        {%for movimentacao in movimentacoes %}
+        <tr>
+            <td>{{ movimentacao.movimentacao_id }}</td>
+            <td>{{ movimentacao.movimentacao_nome }}</td>
+            <td>{{ movimentacao.movimentacao_descricao }}</td>
+            <td>{{ movimentacao.movimentacao_destino }}</td>
+            <td>{{ movimentacao.movimentacao_valor }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

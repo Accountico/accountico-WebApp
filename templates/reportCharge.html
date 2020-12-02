@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Cobrança</h1>
+    <table>
+        <tr>
+            <td>Id</td>
+            <td>Nome</td>
+            <td>Descrição</td>
+            <td>Destino</td>
+            <td>Valor</td>            
+        </tr>
+        
+        {%for cobranca in cobrancas %}
+        <tr>
+            <td>{{ cobranca.cobranca_id }}</td>
+            <td>{{ cobranca.cobranca_nome }}</td>
+            <td>{{ cobranca.cobranca_descricao }}</td>
+            <td>{{ cobranca.cobranca_remetente }}</td>
+            <td>{{ cobranca.cobranca_valor }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

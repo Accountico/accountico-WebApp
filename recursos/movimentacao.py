@@ -83,7 +83,7 @@ class Movimentacoes(Resource):
                     'movimentacao_descricao': linha[2],
                     'movimentacao_destino': linha[3],
                     'movimentacao_valor': linha[4]})
-            return {'movimentacoes': movimentacoes}
+            return movimentacoes
 
 
 argumentos = reqparse.RequestParser()

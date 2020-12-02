@@ -55,7 +55,7 @@ class Cobrancas(Resource):
                     'cobranca_descricao': linha[2],
                     'cobranca_remetente': linha[3],
                     'cobranca_valor': linha[4]})
-            return {'cobrancas': cobrancas}
+            return cobrancas
 
 
 def total_parametros(cobranca_remetente=None, valor_min=0, valor_max=9999999999, **data):

@@ -43,8 +43,21 @@ def token_acesso_invalidado():
 def login():
     if login_ok(request):
         return render_template("login.html")
-    return render_template('login.html', message="")
+    return render_template('login.html', message="Usuário inválido!")
 
+@app.route('/reportcharge')
+def reportCharge():
+    if login_ok(request):
+        cobrancas = Cobrancas().get()
+        return render_template("reportCharge.html", cobrancas = cobrancas)
+    return render_template('login.html', message="Sem autorização.")
+
+@app.route('/reportmoviments')
+def reportMoviments():
+    if login_ok(request):
+        movimentacoes = Movimentacoes().get()
+        return render_template("reportMoviment.html", movimentacoes = movimentacoes)
+    return render_template('login.html', message="Sem autorização.")
 
 @app.route('/register')
 def register():

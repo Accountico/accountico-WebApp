@@ -12,8 +12,8 @@
             <form action="/login" method="POST" class="Login">
                 <h1 class="title">Faça seu login</h1>
 
-                <input type="text" class="Login-Field" id="email" name="usuario_login" placeholder="Seu email..."/>
-                <input type ="password" class="Login-Field" id="password" name="usuario_senha" placeholder="Sua senha..."/>
+                <input type="text" class="Login-Field" id="email" name="usuario_login" placeholder="Seu email..." required />
+                <input type ="password" class="Login-Field" id="password" name="usuario_senha" placeholder="Sua senha..." required />
                 
                 <button type ="submit" class="Login-Btn"  value="Enviar">Entrar</button>
                 {% if message != "" %}

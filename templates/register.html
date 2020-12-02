@@ -22,10 +22,10 @@
             <form class="Register" action="/cadastro" method="POST">
                 <div class="Register-group">
                     <h3 class="title">Crie sua conta</h3>
-                    <input type='text' name='usuario_nome' placeholder='Nome' class="Register-Field" />
-                    <input type='text' name='usuario_sobrenome' placeholder='Sobrenome' class="Register-Field"></input>
-                    <input type='email' name='usuario_login' placeholder='Email' class="Register-Field"></input>
-                    <input type='password' name='usuario_senha' placeholder='Senha' class="Register-Field"></input>
+                    <input type='text' name='usuario_nome' placeholder='Nome' class="Register-Field" required />
+                    <input type='text' name='usuario_sobrenome' placeholder='Sobrenome' class="Register-Field" required ></input>
+                    <input type='email' name='usuario_login' placeholder='Email' class="Register-Field" required ></input>
+                    <input type='password' name='usuario_senha' placeholder='Senha' class="Register-Field" required ></input>
 
                     <button type="submit" class="Register-Btn">Cadastre-se</button>
                     {% if message != "" %}
