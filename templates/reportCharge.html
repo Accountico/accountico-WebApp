@@ -24,10 +24,13 @@
             <td>{{ cobranca.cobranca_descricao }}</td>
             <td>{{ cobranca.cobranca_remetente }}</td>
             <td>{{ cobranca.cobranca_valor }}</td>
-            
-            <form action="/cobrar/" method="DELETE" >
-            <td><button class="btn-excluir">x</button></td>
-            </form>
+           
+            <td>
+                <form action="/cobrar/{{ cobranca.cobranca_id }}" method="POST" >
+                    <button class="btn-excluir">x</button>
+                </form>
+            </td>
+           
         </tr>
         {% endfor %}
     </table>

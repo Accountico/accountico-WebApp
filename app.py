@@ -2,11 +2,11 @@ from flask import Flask, jsonify, render_template, request
 from flask_restful import Api
 from recursos.cliente_cnpj import ClientesCnpj, ClienteCnpj, ClienteCnpjs
 from recursos.cliente_cpf import ClientesCpf, ClienteCpf, ClienteCpfs
-from recursos.cobranca import Cobrancas, Cobranca, Cobrar, TotalCobrancas
-from recursos.movimentacao import Movimentacoes, Movimentacao, Movimento, TotalMovimentos
+from recursos.cobranca import Cobrancas, Cobranca, Cobrar, TotalCobrancas, returnCharge
+from recursos.movimentacao import Movimentacoes, Movimentacao, Movimento, TotalMovimentos, returnMoviments
 from recursos.orcamento import Orcamentos, Orcamento
 from recursos.servico import Servicos, Servico
-from recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout
+from recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout, retornaValores
 from modelos.usuario import UserModel
 from flask_jwt_extended import JWTManager
 from blacklist import BLACKLIST
@@ -48,14 +48,14 @@ def login():
 @app.route('/reportcharge')
 def reportCharge():
     if login_ok(request):
-        cobrancas = Cobrancas().get()
+        cobrancas = returnCharge()
         return render_template("reportCharge.html", cobrancas = cobrancas)
     return render_template('login.html', message="Sem autorização.")
 
 @app.route('/reportmoviments')
 def reportMoviments():
     if login_ok(request):
-        movimentacoes = Movimentacoes().get()
+        movimentacoes = returnMoviments()
         return render_template("reportMoviment.html", movimentacoes = movimentacoes)
     return render_template('login.html', message="Sem autorização.")
 
@@ -65,17 +65,10 @@ def register():
         return render_template("login.html")
     return render_template("register.html")
 
-def formatar(value):
-    return f"R$ {value}"
-
 @app.route('/home')
 def home():
     if login_ok(request):
-        totalCobranca = TotalCobrancas().get()
-        totalMovimentos = TotalMovimentos().get()
-        
-        return render_template("index.html", totalCobranca = formatar(totalCobranca), 
-            totalMovimentos = formatar(totalMovimentos))
+       return retornaValores()
     return render_template("login.html", message="Sem autorização.")
 
 

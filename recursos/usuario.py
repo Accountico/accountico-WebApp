@@ -3,6 +3,9 @@ from flask import render_template
 from flask_restful import Resource, reqparse
 from modelos.usuario import UserModel
 from werkzeug.security import safe_str_cmp
+from recursos.cobranca import TotalCobrancas
+from recursos.movimentacao import TotalMovimentos
+
 
 atributos = reqparse.RequestParser()
 atributos.add_argument('usuario_login', type=str, required=True, help="Campo 'login' não pode estar vazio.")
@@ -29,6 +32,14 @@ class Usuario(Resource):
             return {'message': 'Usuario deletado com sucesso.'}, 200
         return {'message': 'Usuario não encontrado.'}, 404  # not Found
 
+def formatar(value):
+    return f"R$ {value}"
+
+def retornaValores():
+    totalCobranca = TotalCobrancas().get()
+    totalMovimentos = TotalMovimentos().get()
+    return render_template("index.html", totalCobranca = formatar(totalCobranca), 
+        totalMovimentos = formatar(totalMovimentos))
 
 class UsuarioRegistro(Resource):
     def post(self):
@@ -47,7 +58,7 @@ class UsuarioLogin(Resource):
         user = UserModel.achar_por_login(data['usuario_login'])
         if user and safe_str_cmp(user.usuario_senha, data['usuario_senha']):
             # token_acesso = create_access_token(identity=user.usuario_id)
-            r = make_response(render_template("index.html"))
+            r = make_response(retornaValores())
             r.set_cookie("login", data['usuario_login'], samesite="Strict")
             r.set_cookie("senha", data['usuario_senha'], samesite="Strict")
             return r

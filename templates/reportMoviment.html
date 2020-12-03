@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/report.css') }}">
     <title>Relatório de Movimentação</title>
 </head>
+
 <body>
     <h1 class="title">Movimentação</h1>
     <table>
@@ -14,8 +16,8 @@
             <td class="titulo">Nome</td>
             <td class="titulo">Descrição</td>
             <td class="titulo">Destino</td>
-            <td class="titulo">Valor</td>      
-            <td class="titulo">Deseja Excluir?</td>   
+            <td class="titulo">Valor</td>
+            <td class="titulo">Deseja Excluir?</td>
         </tr>
         {%for movimentacao in movimentacoes %}
         <tr>
@@ -24,13 +26,17 @@
             <td>{{ movimentacao.movimentacao_descricao }}</td>
             <td>{{ movimentacao.movimentacao_destino }}</td>
             <td>{{ movimentacao.movimentacao_valor }}</td>
-            
-            <form action="/movimentos/" method="DELETE" >
-            <td><button class="btn-excluir">x</button></td>
-            </form>
+
+            <td>
+                <form action="/movimento/{{ movimentacao.movimentacao_id }}" method="POST">
+                    <button class="btn-excluir">x</button>
+                </form>
+            </td>
+
         </tr>
         {% endfor %}
     </table>
     <a class="voltar" href="/home">Voltar</a>
 </body>
+
 </html>
