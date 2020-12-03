@@ -1,12 +1,12 @@
+from config_json import DATABASE_URL
 from flask_restful import Resource, reqparse
 from flask.helpers import make_response
 from flask import render_template
 from modelos.movimentacao import MovimentacaoModel
 import psycopg2
-from config_json import DATABASE_URL
 
 def returnMoviments():
-    connection = psycopg2.connect(DATABASE_URL) #  (user='postgres', password='admin', host='localhost', port='5432', database='postgres')
+    connection = psycopg2.connect(DATABASE_URL)
     cursor = connection.cursor()
     consulta = "SELECT movimentacao_id, movimentacao_nome, movimentacao_descricao, movimentacao_destino, movimentacao_valor FROM movimentacoes"
     cursor.execute(consulta)
@@ -21,28 +21,23 @@ def returnMoviments():
             'movimentacao_valor': linha[4]})
     return movimentacoes
 
-
 class Movimentacoes(Resource):
     def get(self):
         return returnMoviments()
-
-
 class TotalMovimentos(Resource):
     def get(self):
-        connection = psycopg2.connect(DATABASE_URL)
+        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
         cursor = connection.cursor()
         consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
         cursor.execute(consulta)
         resultado = cursor.fetchone()[0]
         return resultado
 
-
 argumentos = reqparse.RequestParser()
 argumentos.add_argument('movimentacao_nome', type=str, required=True, help="Campo 'Nome da transação' não pode estar vazio!")
 argumentos.add_argument('movimentacao_descricao', type=str, required=False)
 argumentos.add_argument('movimentacao_destino', type=str, required=True, help="Campo 'Destino' não pode estar vazio!")
 argumentos.add_argument('movimentacao_valor', type=float, required=True, help="Campo 'Valor' não pode estar vazio!")
-
 
 class Movimentacao(Resource):
     def get(self, movimentacao_id):

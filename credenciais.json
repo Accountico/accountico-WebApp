@@ -1,8 +1,8 @@
 {
-    "USER": "ctybjlosucjkfy",
-    "PASSWORD": "1ca2ece692fe58adeb872510ebe860de6c2b3a884e062de20491bd494cb6d762",
-    "HOST": "ec2-75-101-212-64.compute-1.amazonaws.com",
+    "USER": "xtgvggpibrxcjm",
+    "PASSWORD": "93432f7e83360e1db512a2a8a58daf23afe10faba8e3a3a3f527897627625edf",
+    "HOST": "ec2-54-243-67-199.compute-1.amazonaws.com",
     "PORT": "5432",
-    "DATABASE": "deptb1nlc5lo0e",
-    "DATABASE_URL": "postgres://ctybjlosucjkfy:1ca2ece692fe58adeb872510ebe860de6c2b3a884e062de20491bd494cb6d762@ec2-75-101-212-64.compute-1.amazonaws.com:5432/deptb1nlc5lo0e"
+    "DATABASE": "d7k2obcsejd7i6",
+    "DATABASE_URL": "postgres://xtgvggpibrxcjm:93432f7e83360e1db512a2a8a58daf23afe10faba8e3a3a3f527897627625edf@ec2-54-243-67-199.compute-1.amazonaws.com:5432/d7k2obcsejd7i6"
 }
