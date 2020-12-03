@@ -3,7 +3,7 @@ from flask import render_template
 from flask_restful import Resource, reqparse
 from modelos.cobranca import CobrancaModel
 import psycopg2
-from config_json import DATABASE_URL
+from config_json import DATABASE_URL, USER, PASSWORD, HOST, PORT, DATABASE
 
 def returnCharge():
     connection = psycopg2.connect(DATABASE_URL) #  (user='postgres', password='admin', host='localhost', port='5432', database='postgres')
@@ -29,7 +29,7 @@ class Cobrancas(Resource):
 
 class TotalCobrancas(Resource):
     def get(self):
-        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
+        connection = psycopg2.connect(user=USER, password=PASSWORD, host=HOST, port=PORT, database=DATABASE)
         cursor = connection.cursor()
         consulta = "SELECT SUM(cobranca_valor) FROM cobrancas AS total"
         cursor.execute(consulta)
