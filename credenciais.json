@@ -1,9 +1,8 @@
 {
-    "USER": "v.a@email.com",
-    "PASSWORD": "accountico",
-    "HOST": "localhost",
+    "USER": "uxqqvgckracvtg",
+    "PASSWORD": "121828a734501174b6ff2dd516012cbfd4c6bf083c1cdb246930c0b290a7834a",
+    "HOST": "ec2-75-101-212-64.compute-1.amazonaws.com",
     "PORT": "5432",
-    "DATABASE": "postgre",
-    "JWT_SECRET_KEY": "access_token",
-    "DATABASE_URL": "postgres://nziquosbodstwx:48dd951530cc2c97c98e6923eb33d2efd323554681e3aace2586b4d7b9e9035a@ec2-54-82-208-124.compute-1.amazonaws.com:5432/dasjv762kuupau"
+    "DATABASE": "d3fa0airohauve",
+    "DATABASE_URL": "postgres://uxqqvgckracvtg:121828a734501174b6ff2dd516012cbfd4c6bf083c1cdb246930c0b290a7834a@ec2-75-101-212-64.compute-1.amazonaws.com:5432/d3fa0airohauve"
 }

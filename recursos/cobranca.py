@@ -3,9 +3,10 @@ from flask import render_template
 from flask_restful import Resource, reqparse
 from modelos.cobranca import CobrancaModel
 import psycopg2
+from config_json import DATABASE_URL
 
 def returnCharge():
-    connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
+    connection = psycopg2.connect(DATABASE_URL) #  (user='postgres', password='admin', host='localhost', port='5432', database='postgres')
     cursor = connection.cursor()
     consulta = "SELECT cobranca_id, cobranca_nome, cobranca_descricao, cobranca_remetente, cobranca_valor FROM cobrancas"
     cursor.execute(consulta)
@@ -19,10 +20,13 @@ def returnCharge():
             'cobranca_remetente': linha[3],
             'cobranca_valor': linha[4]})
     return cobrancas
+
+
 class Cobrancas(Resource):
     def get(self):
         return returnCharge()
-        
+
+
 class TotalCobrancas(Resource):
     def get(self):
         connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
@@ -32,11 +36,14 @@ class TotalCobrancas(Resource):
         resultado = cursor.fetchone()[0]
         return resultado
 
+
 argumentos = reqparse.RequestParser()
 argumentos.add_argument('cobranca_nome', type=str, required=True, help="Campo 'Nome da transação' não pode estar vazio.")
 argumentos.add_argument('cobranca_descricao', type=str, required=False)
 argumentos.add_argument('cobranca_remetente', type=str, required=True, help="Campo 'Remetente' não pode estar vazio.")
 argumentos.add_argument('cobranca_valor', type=float, required=True, help="Campo 'Valor' não pode estar vazio.")
+
+
 class Cobranca(Resource):
     def get(self, cobranca_id):
         cobranca = CobrancaModel.achar_cobranca(cobranca_id)

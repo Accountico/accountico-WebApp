@@ -20,9 +20,12 @@ def returnMoviments():
             'movimentacao_valor': linha[4]})
     return movimentacoes
 
+
 class Movimentacoes(Resource):
     def get(self):
         return returnMoviments()
+
+
 class TotalMovimentos(Resource):
     def get(self):
         connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
@@ -32,11 +35,13 @@ class TotalMovimentos(Resource):
         resultado = cursor.fetchone()[0]
         return resultado
 
+
 argumentos = reqparse.RequestParser()
 argumentos.add_argument('movimentacao_nome', type=str, required=True, help="Campo 'Nome da transação' não pode estar vazio!")
 argumentos.add_argument('movimentacao_descricao', type=str, required=False)
 argumentos.add_argument('movimentacao_destino', type=str, required=True, help="Campo 'Destino' não pode estar vazio!")
 argumentos.add_argument('movimentacao_valor', type=float, required=True, help="Campo 'Valor' não pode estar vazio!")
+
 
 class Movimentacao(Resource):
     def get(self, movimentacao_id):
