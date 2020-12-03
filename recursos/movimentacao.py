@@ -26,7 +26,7 @@ class Movimentacoes(Resource):
         return returnMoviments()
 class TotalMovimentos(Resource):
     def get(self):
-        connection = psycopg2.connect(user='postgres', password='admin', host='localhost', port='5432', database='postgres')
+        connection = psycopg2.connect(DATABASE_URL)
         cursor = connection.cursor()
         consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
         cursor.execute(consulta)
