@@ -1,5 +1,4 @@
 from sql_alchemy import banco
-# from modelos.servico import ServicoModel
 
 
 class CobrancaModel(banco.Model):

@@ -1,5 +1,4 @@
 from sql_alchemy import banco
-# from modelos.cliente import ClienteModel
 
 class MovimentacaoModel(banco.Model):
     __tablename__ = 'movimentacoes'
@@ -31,10 +30,6 @@ class MovimentacaoModel(banco.Model):
         if movimentacao:
             return movimentacao
         return None
-
-#    @classmethod
-#    def somar_movimentacao(cls, movimentacao_id):
-#        valores = cls.query.filter_by(movimentacao_id=movimentacao_id).first()
 
     def salvar_movimentacao(self):
         banco.session.add(self)

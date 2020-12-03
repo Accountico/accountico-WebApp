@@ -1,6 +1,4 @@
 from sql_alchemy import banco
-
-
 class UserModel(banco.Model):
     __tablename__ = 'usuarios'
     usuario_id = banco.Column(banco.Integer, primary_key=True)
