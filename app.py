@@ -1,11 +1,7 @@
 from flask import Flask, jsonify, render_template, request
 from flask_restful import Api
-from recursos.cliente_cnpj import ClientesCnpj, ClienteCnpj, ClienteCnpjs
-from recursos.cliente_cpf import ClientesCpf, ClienteCpf, ClienteCpfs
 from recursos.cobranca import Cobrancas, Cobranca, Cobrar, TotalCobrancas, returnCharge
 from recursos.movimentacao import Movimentacoes, Movimentacao, Movimento, TotalMovimentos, returnMoviments
-from recursos.orcamento import Orcamentos, Orcamento
-from recursos.servico import Servicos, Servico
 from recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout, retornaValores
 from modelos.usuario import UserModel
 from flask_jwt_extended import JWTManager
@@ -97,13 +93,6 @@ def login_ok(req):
     user = UserModel.achar_por_login(login)
     return user is not None and safe_str_cmp(user.usuario_senha, senha)
 
-
-api.add_resource(ClientesCpf, '/clientes-cpf')
-api.add_resource(ClienteCpf, '/clientescpf')
-api.add_resource(ClienteCpfs, '/clientescpfs/<string:cliente_id>')
-api.add_resource(ClientesCnpj, '/clientes-cnpj')
-api.add_resource(ClienteCnpj, '/clientescnpj')
-api.add_resource(ClienteCnpjs, '/clientescnpjs/<string:cliente_id>')
 api.add_resource(Cobrancas, '/cobrancas')  # GET
 api.add_resource(Cobranca, '/cobranca')  # POST
 api.add_resource(Cobrar, '/cobrar/<string:cobranca_id>') # DELETE
@@ -112,10 +101,6 @@ api.add_resource(Movimentacoes, '/movimentacoes')
 api.add_resource(Movimentacao, '/movimentacao')
 api.add_resource(Movimento, '/movimento/<string:movimentacao_id>')
 api.add_resource(TotalMovimentos, '/totalmovimentos')
-api.add_resource(Orcamentos, '/orcamentos')
-api.add_resource(Orcamento, '/orcamentos/<string:orcamentos_id>')
-api.add_resource(Servicos, '/servicos')
-api.add_resource(Servico, '/servicos/<string:servicos_id>')
 api.add_resource(Usuario, '/usuarios/<int:user_id>')
 api.add_resource(UsuarioRegistro, '/cadastro')
 api.add_resource(UsuarioLogin, '/login')
