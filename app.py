@@ -43,7 +43,7 @@ def token_acesso_invalidado():
 def login():
     if login_ok(request):
         return render_template("login.html")
-    return render_template('login.html', message="Usuário inválido!")
+    return render_template('login.html', message="")
 
 @app.route('/reportcharge')
 def reportCharge():
