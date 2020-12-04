@@ -1,4 +1,4 @@
-from config_json import DATABASE_URL
+from config_json import *
 from flask_restful import Resource, reqparse
 from flask.helpers import make_response
 from flask import render_template

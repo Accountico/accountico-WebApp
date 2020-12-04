@@ -1,6 +1,5 @@
 Flask
 Flask-RESTful
-Flask-JWT-Extended
 Flask-SQLAlchemy
 Jinja2
 Werkzeug
