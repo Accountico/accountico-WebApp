@@ -5,9 +5,9 @@ from recursos.movimentacao import Movimentacoes, Movimentacao, Movimento, TotalM
 from recursos.usuario import Usuario, UsuarioRegistro, UsuarioLogin, UsuarioLogout, retornaValores
 from modelos.usuario import UserModel
 from flask_jwt_extended import JWTManager
-from blacklist import BLACKLIST
 from werkzeug.security import safe_str_cmp
 from config_json import DATABASE_URL
+from flask_sslify import SSLify
 
 
 app = Flask(__name__)
@@ -111,4 +111,5 @@ api.add_resource(UsuarioLogout, '/logout')
 if __name__ == '__main__':
     from sql_alchemy import banco
     banco.init_app(app)
-    app.run(ssl_context=('cert.pem', 'key.pem'))
+    # app.run(ssl_context=('cert.pem', 'key.pem'), debug=True)
+    sslify = SSLify(app.run(ssl_context=('cert.pem', 'key.pem'), debug=True))
