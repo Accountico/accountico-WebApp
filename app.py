@@ -9,6 +9,7 @@ from blacklist import BLACKLIST
 from werkzeug.security import safe_str_cmp
 from config_json import DATABASE_URL
 
+
 app = Flask(__name__)
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
@@ -110,4 +111,4 @@ api.add_resource(UsuarioLogout, '/logout')
 if __name__ == '__main__':
     from sql_alchemy import banco
     banco.init_app(app)
-    app.run(ssl_context=('cert.pem', 'key.pem'), debug=True)
+    app.run(ssl_context=('cert.pem', 'key.pem'))
