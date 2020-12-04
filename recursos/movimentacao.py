@@ -28,7 +28,7 @@ class TotalMovimentos(Resource):
     def get(self):
         connection = psycopg2.connect(DATABASE_URL)
         cursor = connection.cursor()
-        consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes"
+        consulta = "SELECT SUM(movimentacao_valor) FROM movimentacoes AS total"
         cursor.execute(consulta)
         resultado = cursor.fetchone()[0]
         return resultado
