@@ -9,7 +9,6 @@ from werkzeug.security import safe_str_cmp
 from config_json import DATABASE_URL
 from flask_sslify import SSLify
 
-
 app = Flask(__name__)
 api = Api(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
@@ -18,6 +17,7 @@ app.config['JWT_SECRET_KEY'] = 'access_token'
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['CORS_HEADERS'] = 'Content-Type'
 jwt = JWTManager(app)
+
 
 
 @app.before_first_request
